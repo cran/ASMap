@@ -58,7 +58,7 @@ mstmap.cross <- function(object, chr, id = "Genotype", bychr = TRUE, suffix = "n
                }, geno, allele)
     mn <- markernames(object)
     if(!bychr) {
-        ochr <- names(object$geno)
+        names(object$geno) <- ochr <- paste("ALL", 1:length(object$geno), sep = "")
         object$geno$"L"$data <- do.call("cbind", lapply(object$geno, function(el) el$data))
         object$geno$"L"$map <- unlist(lapply(object$geno, function(el) el$map))
         class(object$geno$"L") <- class(object$geno[[1]])
@@ -93,6 +93,7 @@ mstmap.cross <- function(object, chr, id = "Genotype", bychr = TRUE, suffix = "n
             }, imf, mf)
         }
         chrw <- nm[i]
+        print(chrw)
         nmm <- names(object$geno[[chrw]]$map)
         if(anchor)
             mst <- lapply(mst, function(el, nmm){
@@ -258,7 +259,7 @@ subsetCross <- function(cross, chr, ind, ...){
 mstmap.data.frame <- function(object, pop.type= "DH", dist.fun = "kosambi",
                    objective.fun= "COUNT", p.value=1e-6, noMap.dist=15.0, noMap.size=0,
                    miss.thresh=1.0, mvest.bc=FALSE, detectBadData=FALSE,
-                   as.cross = TRUE, return.imputed = TRUE, trace=FALSE, ...) {
+                   as.cross = TRUE, return.imputed = FALSE, trace=FALSE, ...) {
     if(trace) trace <- "MSToutput.txt"
     if (is.character(trace)) {
         ftrace <- file(trace, "w")
@@ -267,7 +268,7 @@ mstmap.data.frame <- function(object, pop.type= "DH", dist.fun = "kosambi",
         on.exit(close(ftrace), add = TRUE)
         trace <- TRUE
     }
-    if(!all(sapply(object, is.character)) | !all(sapply(object, is.character)))
+    if(!all(sapply(object, is.character)) & !all(sapply(object, is.numeric)))
         stop("Columns of the marker data.frame must be all of type \"character\" or all of \"numeric\".")
     RILN <- paste("RIL",1:20, sep = "")
     allow.pop <- c("BC","DH","ARIL",RILN)
@@ -282,7 +283,7 @@ mstmap.data.frame <- function(object, pop.type= "DH", dist.fun = "kosambi",
     allow.list <- c("A","a","B","b","-","U")
     ptype <- pop.type
     if(pop.type %in% c("BC","DH","ARIL")){
-        if(is.numeric(object)){
+        if(all(sapply(object, is.numeric))){
             if(any(apply(object, 2, function(el) length(el[is.na(el)]))))
                 stop("Numeric input cannot contain missing values")
             if(any(apply(object, 2, function(el) el < 0 | el > 1)))
@@ -328,7 +329,7 @@ mstmap.data.frame <- function(object, pop.type= "DH", dist.fun = "kosambi",
     marks <- unlist(lapply(map, names))
     ordm <- pmatch(marks, rownames(object))
     if(any(is.na(ordm)))
-        omit.list <- t(object[is.na(ordm),])
+        omit.list <- t(object[is.na(ordm), drop = FALSE])
     ordm <- ordm[!is.na(ordm)]
     object <- object[ordm,]
     chn <- paste("L", 1:length(map), sep = "")
@@ -375,7 +376,7 @@ mstmap.data.frame <- function(object, pop.type= "DH", dist.fun = "kosambi",
                 el})
              names(co$imputed.geno) <- chn
          }
-        co$pheno <- data.frame(Genotype = factor(rownames(object)))
+        co$pheno <- data.frame(Genotype = factor(dimnames(object)[[2]]))
         wp <- (1:23)[allow.pop %in% ptype]
         class(co) <- c(c("bc","dh","riself",rep("f2",20))[wp],"cross")
         if(wp %in% 4:23) co <- convert2bcsft(co, F.gen = wp - 3, estimate.map = FALSE)
@@ -390,7 +391,7 @@ mstmap.data.frame <- function(object, pop.type= "DH", dist.fun = "kosambi",
             imp <- lapply(mst, function(el){
                 nm <- names(el$map)[names(el$map) %in% dimnames(el$imputed_values)[[1]]]
                 pm <- pmatch(nm, dimnames(el$imputed_values)[[1]])
-                el$imputed_values <- el$imputed_values[pm,]
+                el$imputed_values <- el$imputed_values[pm, , drop = FALSE]
                 el$imputed_values })
             chri <- rep(chn, times = sapply(imp, function(el) dim(el)[1]))
             marki <- unlist(lapply(imp, rownames))
@@ -1014,16 +1015,103 @@ combineMap <- function(..., id = "Genotype", keep.all = TRUE){
         names(temp$map) <- dimnames(temp$data)[[2]] <- sapply(spl.c, "[", 2)
         mo <- order(temp$map)
         temp$map <- temp$map[mo]
-        temp$data <- temp$data[,mo]
+        temp$data <- temp$data[,mo, drop = FALSE]
         class(temp) <- unique(sapply(spl.c, "[", 4))
         temp
-    }, nams)
+    }, nams[mxo])
     class(mapf) <- class(mapl[[1]])
     attr(mapf, "scheme") <- scheme[[1]]
     mapf$pheno <- phem
     mapf$geno <- mapf$geno[mixedorder(names(mapf$geno))]
     mapf
 }
+
+## combineMap <- function(..., id = "Genotype", keep.all = TRUE, merge.by = "genotype"){
+##     mapl <- list(...)
+##     if(merge.by %in% "genotype"){
+##         marku <- unlist(lapply(mapl, function(el) markernames(el)))
+##         if(any(table(marku) > 1))
+##             stop("Non-unique markers between linkage maps.")
+##     } else {
+##         genu <- unlist(lapply(mapl, function(el) as.character(el$pheno[[id]])))
+##         if(any(table(genu) > 1))
+##             stop("Non-unique genotypes between linkage maps.")
+##     }
+##     if(length(unique(sapply(mapl, function(el) class(el)[1]))) > 1)
+##         stop("Classes of maps need to be identical.")
+##     scheme <- lapply(mapl, function(el) attr(el, "scheme"))
+##     if(any(!sapply(scheme, is.null))){
+##         sc <- do.call("rbind", scheme)
+##         if((nrow(sc) != length(mapl)) | !all(duplicated(sc)[2:nrow(sc)]))
+##             stop("Mismatched cross schemes in linkage maps")
+##     }
+##     if(!all(sapply(mapl, function(el) id %in% names(el$pheno))))
+##         stop("Some linkage maps do not contain column\"", id, "\".")
+##     mapl <- lapply(mapl, function(el){
+##         names(el$geno) <- gsub("x","X", names(el$geno))
+##         el})
+##     maplb <- lapply(mapl, function(el, merge.by){
+##         mapb <- do.call("cbind", lapply(el$geno, function(x) x$data))
+##         mdist <- unlist(pull.map(el))
+##         chrs <- rep(names(el$geno), times = nmar(el))
+##         cl <- sapply(el$geno, function(el) class(el))
+##         dimnames(mapb)[[2]] <- paste(chrs, markernames(el), as.character(mdist), cl, sep = ";")
+##         dimnames(mapb)[[1]] <- as.character(el$pheno[[id]])
+##         if(merge.by %in% "marker"){
+##             mapb <- as.data.frame(t(mapb))
+##             mapb[[merge.by]] <- markernames(el)
+##             mapb[["dims"]] <- dimnames(mapb)[[1]]
+##         } else {
+##             mapb <- as.data.frame(mapb)
+##             mapb[[merge.by]] <- as.character(el$pheno[[id]])
+##         }
+##         mapb
+##     }, merge.by)
+##     phelb <- lapply(mapl, function(el) el$pheno)
+##     mapm <- maplb[[1]]
+##     phem <- phelb[[1]]
+##     for(i in 1:(length(maplb) - 1)) {
+##         mapm <- merge(mapm, maplb[[i + 1]], by = merge.by, all = keep.all)
+##         phem <- merge(phem, phelb[[i + 1]], by = id, all = keep.all)
+##     }
+##     if(length(wh <- grep("dims", names(mapm)))){
+##         dnam <- apply(mapm[,wh], 1, function(el){
+##             el <- el[!is.na(el)]
+##             el[1] })
+##         omit <- c(names(mapm)[wh], "marker")
+##         mapm <- mapm[,!(names(mapm) %in% omit)]
+##         rownames(mapm) <- dnam
+##     } else {
+##         rownames(mapm) <- mapm[["genotype"]]
+##         mapm <- t(mapm[,!(names(mapm) %in% "genotype")])
+##     }
+##     nams <- dimnames(mapm)[[2]]
+##     mxo <- mixedorder(nams)
+##     mapm <- mapm[,mxo]
+##     phem <- phem[mixedorder(phem[[id]]),,drop = FALSE]
+##     spl.m <- strsplit(rownames(mapm), ";")
+##     ch <- sapply(spl.m, "[", 1)
+##     mapf <- list()
+##     mapf$geno <- lapply(split.data.frame(mapm, ch), function(el, nams){
+##         temp <- list()
+##         spl.c <- strsplit(rownames(el), ";")
+##         if(nrow(el) == 1) print(as.matrix(t(el)))
+##         temp$data <- as.matrix(t(el))
+##         rownames(temp$data) <- nams
+##         temp$map <- as.numeric(sapply(spl.c, "[", 3))
+##         names(temp$map) <- dimnames(temp$data)[[2]] <- sapply(spl.c, "[", 2)
+##         mo <- order(temp$map)
+##         temp$map <- temp$map[mo]
+##         temp$data <- temp$data[,mo, drop = FALSE]
+##         class(temp) <- unique(sapply(spl.c, "[", 4))
+##         temp
+##     }, nams[mxo])
+##     class(mapf) <- class(mapl[[1]])
+##     attr(mapf, "scheme") <- scheme[[1]]
+##     mapf$pheno <- phem
+##     mapf$geno <- mapf$geno[mixedorder(names(mapf$geno))]
+##     mapf
+## }
 
 statMark <- function(cross, chr, stat.type = c("marker","interval"), map.function = "kosambi"){
     if (!any(class(cross) == "cross"))

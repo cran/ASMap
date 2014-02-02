@@ -167,7 +167,7 @@ missing observations between pairs of markers.
 
 It should be highlighted that for population types
 \code{"bc","dh","riself"}, imputation of missing values occurs
-regardless of the value of \code{mv.est.bc}. This is achieved using an EM algorithm that is
+regardless of the value of \code{mvest.bc}. This is achieved using an EM algorithm that is
 tightly coupled with marker ordering (see Wu et al., 2008). Initially
 a marker order is obtained omitting missing marker scores and then
 imputation is performed based on the underlying recombinant probabilities

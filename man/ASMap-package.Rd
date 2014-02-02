@@ -15,7 +15,7 @@ ordering using MSTmap (see Wu et al., 2008).
 \tabular{ll}{
 Package: \tab ASMap\cr
 Type: \tab Package\cr
-Version: \tab 0.3\cr
+Version: \tab 0.3-3\cr
 Date: \tab 2014-08-20\cr
 License: \tab GPL 2\cr
 }

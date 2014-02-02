@@ -12,7 +12,7 @@ linkage group clustering, marker ordering and genetic distance calculations.
 \method{mstmap}{data.frame}(object, pop.type = "DH", dist.fun = "kosambi",
       objective.fun = "COUNT", p.value = 1e-06, noMap.dist = 15,
       noMap.size = 0, miss.thresh = 1, mvest.bc = FALSE, detectBadData = FALSE,
-      as.cross = TRUE, return.imputed = TRUE, trace = FALSE, \ldots)
+      as.cross = TRUE, return.imputed = FALSE, trace = FALSE, \ldots)
 }
 \arguments{
   \item{object}{
@@ -151,7 +151,7 @@ missing observations between pairs of markers.
 
 It should be highlighted that for population types
 \code{"BC","DH","ARIL"}, imputation of missing values occurs
-regardless of the value of \code{mv.est.bc}. This is achieved using an EM algorithm that is
+regardless of the value of \code{mvest.bc}. This is achieved using an EM algorithm that is
 tightly coupled with marker ordering (see Wu et al., 2008). Initially
 a marker order is obtained omitting missing marker scores and then
 imputation is performed based on the underlying recombinant probabilities

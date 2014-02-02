@@ -1,11 +1,11 @@
-1e63ce20832474acc1619aebf47fd15f *DESCRIPTION
+b7375b44f88341340a42b3fb6f5bee99 *DESCRIPTION
 e69d095337e4c78e924b160c7932afdf *NAMESPACE
-13612f90471b7c0c4263d32b7f5bc468 *R/mstmap9.R
+d7660eac7d60ca3a61af373d3de3824c *R/mstmap9.R
 8361abecedbbfa352c7c1465d20dfba9 *data/mapDH.RData
 e899068e5d6e986d2f9e6ea4e401e21f *data/mapDHu.RData
 c1ab20939189754e8277c7debf950701 *data/mapF2.RData
 eca0f5e4c34638820bdacceaeaa3ab6e *man/ASMap-internal.Rd
-a88f35b82c4053265c81ffd3dd99a3ee *man/ASMap-package.Rd
+5fded5ba259ab361d209fd5791b713db *man/ASMap-package.Rd
 2edd75dcd87a651abd50bd8183eb8abe *man/breakCross.Rd
 9ed57e3d266c221ece169d4fdac11767 *man/combineMap.Rd
 2f34582a6551d01c01811e636e947584 *man/fixClones.Rd
@@ -15,8 +15,8 @@ f5606b5ba6d09b73d90b4727b0a40ff8 *man/genClones.Rd
 592f4529aa47715ffd4a0a3766d3d989 *man/mapDHu.Rd
 f563ec52f273c53fdea61c13e92a89c1 *man/mapF2.Rd
 32a53c55307b9d8845b10874b99ce3a1 *man/mergeCross.Rd
-238cd05f04c0f686ff4cc30c1ee4b7e8 *man/mstmap.cross.Rd
-92c229cfce60fea9b306bface9c215a5 *man/mstmap.data.frame.Rd
+407338c05d9af965879c861b52d378a8 *man/mstmap.cross.Rd
+f6e5c32d68c11a8aa9daa74008ee8ab2 *man/mstmap.data.frame.Rd
 592b9900ee69bc52dfcef4112dca1618 *man/pp.init.Rd
 1057fef6c7ebb9076662df3f73f05e44 *man/profileGen.Rd
 bdf2803d00ef02abd87263194dd8502e *man/profileMark.Rd
