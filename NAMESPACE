@@ -1,0 +1,34 @@
+## imports
+import(
+qtl,
+gtools,
+fields,
+lattice)
+
+##[exports]
+export(
+breakCross,
+mergeCross,
+combineMap,
+quickEst,
+genClones,
+fixClones,
+mstmap.cross,
+mstmap.data.frame,
+mstmap,
+heatMap,
+pullCross,
+pushCross,
+pp.init,
+statGen,
+profileGen,
+statMark,
+profileMark)
+
+##[S3 Methods]
+S3method(mstmap, default)
+S3method(mstmap, cross)
+S3method(mstmap, data.frame)
+
+##[Dynamic libraries]
+useDynLib("ASMap")
