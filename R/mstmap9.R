@@ -211,7 +211,7 @@ mergeCross <- function(cross, merge = NULL, gap = 5){
       sc[[1]]$data <- do.call("cbind", lapply(sc, function(el) el$data))
       mapd <- sc[[1]]$map
       for(j in 2:length(sc))
-          mapd <- c(mapd, sc[[j]]$map + max(sc[[j - 1]]$map) + gap)
+          mapd <- c(mapd, sc[[j]]$map + max(mapd)[1] + gap)
       sc[[1]]$map <- mapd
       names(sc[[1]]$map) <- dimnames(sc[[1]]$data)[[2]]
       sc <- sc[1]
@@ -1036,16 +1036,18 @@ statMark <- function(cross, chr, stat.type = c("marker","interval"), map.functio
                   paste("(",names(el$map)[1:(len - 1)],",", names(el$map)[2:len],")", sep = "")
               }))
         chr <- rep(names(nmo), times = nmo - 1)
-        mrk$interval <- cbind.data.frame(chr = chr, mrk$interval)
+        pos <- unlist(lapply(icross$geno, function(el) el$map[1:(length(el$map)-1)] + diff(el$map)/2), use.names = FALSE)
+        mrk$interval <- cbind.data.frame(chr = chr, pos = pos, mrk$interval)
         mrk$interval$chr <- as.character(mrk$interval$chr)
         if(any(nm == 1)){
             sc1 <- names(nm)[nm == 1]
             mark1 <- markernames(subset(cross, chr = sc1))
             for(i in 1:length(sc1)) {
                 mrk$interval[nrow(mrk$interval) + 1,1] <- sc1[i]
+                mrk$interval$pos[nrow(mrk$interval)] <- 0
                 rownames(mrk$interval)[nrow(mrk$interval)] <- paste("(",mark1[i],")", sep = "")
             }
-            mrk$interval <- mrk$interval[mixedorder(rownames(mrk$interval)),]
+            mrk$interval <- mrk$interval[mixedorder(mrk$interval$chr),]
         }
     }
     mrk
@@ -1118,7 +1120,7 @@ profileMark <- function(cross, chr, stat.type = "marker", use.dist = TRUE, map.f
         inam <- paste("Interval: ", inam, sep = "")
         intn <- rownames(stat$interval)
         lod <- stat$interval$lod
-        stat$interval <- cbind.data.frame(val = unlist(stat$interval[,(2:6)[itype]]))
+        stat$interval <- cbind.data.frame(val = unlist(stat$interval[,(3:7)[itype]]))
         idist <- unlist(lapply(split(dist, chrn), function(el){
             if(length(el) == 1) el
             else el[1:(length(el)-1)] + diff(el)/2
