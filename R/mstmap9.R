@@ -223,6 +223,38 @@ mergeCross <- function(cross, merge = NULL, gap = 5){
    cross
 }
 
+subsetCross <- function(cross, chr, ind, ...){
+    if(!inherits(cross, c("bc","dh","riself","bcsft")))
+        stop("Cross object must inherit from one of the classes \"bc\", \"dh\",\"riself\",\"bcsft\". See ?subsetCross for more details.")
+    if(!missing(chr))
+        cross <- subset(cross, chr = chr, ...)
+    if(!missing(ind)){
+        n.ind <- nind(cross)
+        if(!(is.numeric(ind) | is.logical(ind)))
+            stop("Argument ind can only be logical or numeric.")
+        cross <- subset(cross, ind = ind, ...)
+        if(is.numeric(ind) & all(ind < 0))
+            ind <- (1:n.ind)[ind]
+        type <- c("co.located","seg.distortion","missing")
+        if(any(wh <- type %in% names(cross))){
+            type <- type[wh]
+            for(i in type){
+                cross[[i]]$data <- cross[[i]]$data[ind,,drop = FALSE]
+                tcross <- cross
+                if(i %in% c("seg.distortion","missing")){
+                    tcross$geno[[i]]$data <- cross[[i]]$data
+                    tcross$geno[[i]]$map <- 1:ncol(cross[[i]]$data)
+                    class(tcross$geno[[i]]) <- "A"
+                    tab <- geno.table(tcross, chr = i, scanone.output = TRUE)
+                    if(class(cross)[1] == "bcsft") tab <- tab[,1:(ncol(tab) - 2)]
+                    cross[[i]]$table[,4:ncol(cross[[i]]$table)] <- tab[,3:ncol(tab)]
+                }
+            }
+        }
+    }
+    cross
+}
+
 mstmap.data.frame <- function(object, pop.type= "DH", dist.fun = "kosambi",
                    objective.fun= "COUNT", p.value=1e-6, noMap.dist=15.0, noMap.size=0,
                    miss.thresh=1.0, mvest.bc=FALSE, detectBadData=FALSE,
@@ -679,6 +711,10 @@ pp.init <- function(seg.thresh = 0.05, seg.ratio = NULL, miss.thresh = 0.1, max.
    }
 
 pullCross <- function(object, chr, type = c("co.located","seg.distortion","missing"), pars = NULL, replace = FALSE, ...){
+    if(!is.null(object[[type]])){
+        if(dim(object$pheno)[1] != dim(object[[type]]$data)[1])
+            stop("Number of genotypes in linkage map does not match external ", type, " data.")
+    }
     if(is.null(pars))
         pars <- pp.init()
     if(!is.list(pars))
@@ -769,6 +805,10 @@ pushCross <- function(object, type = c("co.located","seg.distortion","missing","
         x <- x[!sapply(x, is.null)]
         class(x) <- cc
         x }
+    if(type != "unlinked"){
+       if(dim(object$pheno)[1] != dim(object[[type]]$data)[1])
+           stop("Number of genotypes in linkage map does not match external ", type, " data.")
+    }
     cs <- attr(object, "scheme")
     if(is.null(pars))
          pars <- pp.init()
@@ -793,7 +833,8 @@ pushCross <- function(object, type = c("co.located","seg.distortion","missing","
         }
         chrn <- rep(names(nmar(object)), times = nmar(object))
         nb <- sapply(bm, nrow)
-        chrn <- chrn[mnam %in% om]
+#        chrn <- chrn[mnam %in% om]
+        chrn <- chrn[pmatch(om, mnam)]
         for(i in 1:length(bm)){
             chr <- chrn[i]
             omap <- object$geno[[chr]]$map
@@ -989,6 +1030,8 @@ statMark <- function(cross, chr, stat.type = c("marker","interval"), map.functio
         stop("Input should have class \"cross\".")
     if(!(class(cross)[1] %in% c("bc","dh","riself","bcsft")))
         stop("This function is not suitable for this population type, see ?statMark.")
+    if(any(!(stat.type %in% c("marker","interval"))))
+        stop("Value for stat.type argument does not match allowable names, see ?statMak.")
     if (!missing(chr))
         cross <- subset(cross, chr = chr)
     nm <- nmar(cross)
@@ -1063,7 +1106,7 @@ profileMark <- function(cross, chr, stat.type = "marker", use.dist = TRUE, map.f
         cross <- subset(cross, chr)
     stypes <- c("seg.dist","miss","prop","dxo","erf","lod","dist","mrf","recomb")
     mtypes <- c("marker","interval")
-    if(!all(stat.type %in% c(mtypes, stypes)))
+    if(any(!(stat.type %in% c(mtypes, stypes))))
         stop("Value for stat.type argument does not match allowable names, see ?profileMark.")
     rmtypes <- rep(mtypes, times = c(4,5))
     if(!any(stypes %in% stat.type)){
@@ -1165,6 +1208,11 @@ statGen <- function(cross, chr, bychr = TRUE, stat.type = c("xo","dxo","miss"), 
         stop("Input should have class \"cross\".")
     if(!(class(cross)[1] %in% c("bc","dh","riself","bcsft")))
         stop("This function not suitable for this population type, ?see statGen.")
+    if(!(id %in% names(cross$pheno)))
+        stop("The unique identifier for the genotypes, ", deparse(substitute(id)),
+             ", cannot be found in the object")
+    if(any(!(stat.type %in% c("xo","dxo","miss"))))
+        stop("Value for stat.type argument does not match allowable names, see ?statGen.")
     if (!missing(chr))
         cross <- subset(cross, chr = chr)
     nch <- nchr(cross)
@@ -1216,6 +1264,9 @@ profileGen <- function(cross, chr, bychr = TRUE, stat.type = c("xo","dxo","miss"
         stop("Input should have class \"cross\".")
     if(!(class(cross)[1] %in% c("bc","dh","riself","bcsft")))
         stop("This function not suitable for this population type, see ?profileGen.")
+    if(!(id %in% names(cross$pheno)))
+         stop("The unique identifier for the genotypes, ", deparse(substitute(id)),
+              ", cannot be found in the object")
     if (!missing(chr))
         cross <- subset(cross, chr = chr)
      nm <- nmar(cross)

@@ -13,8 +13,8 @@
 #include "constants.h"
 
 
-MSTOpt::MSTOpt(const vector<vector<double> > & _pair_wise_distances, int _num_bins, int nested_level) 
-  : pair_wise_distances(_pair_wise_distances), number_of_bins(_num_bins) { 
+MSTOpt::MSTOpt(const vector<vector<double> > & _pair_wise_distances, int _num_bins, int nested_level)
+  : pair_wise_distances(_pair_wise_distances), number_of_bins(_num_bins) {
   verbose_ = kMSTVerbose;
   if((int)pair_wise_distances.size() != (int)number_of_bins)
     Rf_error("pair_wise_distances.size() %d != number_of_bins %d\n",
@@ -39,21 +39,21 @@ double MSTOpt::calculate_MST()
         /*get the closest vertex*/
         int closest_vertex = -1;
         double shortest_distance = numeric_limits<double>::max();
-        
-        /* 
+
+        /*
         // print out something for debugging
         for (int kk = 0; kk < number_of_bins; kk++){
             cout << visitted[kk] << ' ';
         }
         cout << endl;
         cout << "number of bins:" << number_of_bins << endl;
-        
+
         for (int kk = 0; kk < number_of_bins; kk++){
             cout << estimated_distance[kk] << endl;
         }
         cout << endl;
         */
-        
+
         for (int jj = 0; jj < number_of_bins; jj ++)
         {
             if ((visitted[jj] == false) && (shortest_distance > estimated_distance[jj]))
@@ -65,10 +65,10 @@ double MSTOpt::calculate_MST()
 	if(closest_vertex == -1)
 	  Rf_error("closest_vertex == -1\n");
         //assert(closest_vertex != -1);
-        
+
         visitted[closest_vertex] = true;
         MST_lower_bound = MST_lower_bound + shortest_distance;
-        
+
         /*update the estimated_distance vector*/
         for (int jj = 0 ; jj < number_of_bins; jj++)
         {
@@ -79,7 +79,7 @@ double MSTOpt::calculate_MST()
             }
         }
     }//end for
-    
+
     return MST_lower_bound;
 }
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +93,7 @@ void MSTOpt::find_opt_order()
   new_serialization();
   local_improvement();
   // modified by yonghui on Feb 1st, 2008
-  // In order to avoid excessive long running time, 
+  // In order to avoid excessive long running time,
   // block optimization is only applied to level 1 and level 2
   if (nested_level_ <= 2) {
     bool changed = true;
@@ -103,63 +103,70 @@ void MSTOpt::find_opt_order()
   }
 }
 ////////////////////////////////////////////////////////////////////////////////////////
-// September 2014 DB
+// October 2014 DB
 // Hack(s) for g++ on Windows 32 bit for anything higher than -O0 !!!!!
-// snd 'safer' (???) than rnd but much slower
-#include <sstream>
-double snd(double x) {
-    ostringstream ss;
-    ss << fixed;
-    ss.precision(5);
-    ss << x;
-return (double)atof(ss.str().c_str());
+// string manip 'safer' (???) than rnd but much slower
+// #ifdef __x86_64
+#ifdef _WIN32
+double rnd (double x) {
+  return(roundf(x * 1e5) / 1e5);
 }
-double rnd (double val) {
-  return(roundf(val * 1e5) / 1e5);
+#else
+double rnd(double x) {
+  return x;
 }
+#endif
+// #include <sstream>
+// #include <iomanip>
+// double rnd(double x) {
+//   std::stringstream ss;
+//   ss << std::fixed << std::setprecision(5) << x;
+//   return strtod(ss.str().c_str(),NULL);
+// }
+
 void MSTOpt::local_improvement()
 {
   /*Run the heuristic only if the current_lowerbound is not equal to the current upperbound*/
   if (current_upper_bound > MST_lower_bound)
     {
       bool changed = true;
-      
+
       /*a vector used to hold temporary elements*/
       vector<int> tmp_storage;
       tmp_storage.resize(number_of_bins, -1);
-      
+
       while(changed)
-        {        
+        {
 	  /*execute the heuristic iteratively until no improvement can be made*/
 	  while (changed)
             {
 	      changed = false;
-	      
+
 	      /*Emulate the KL heuristic, consider all the possible 2-ops*/
 	      /*ii is the id of the first edge to be removed, and jj is the id of the second edge to be removed*/
-	      
+
 	      for (int ii = 1; ii < number_of_bins; ii ++)
                 {
 		  for (int jj = ii+1; jj < number_of_bins; jj++)
                     {
-		      
+
 		      /*step 1: determine if the new path/paths is shorter than the original path*/
-		      double gone_edges_weight = pair_wise_distances[current_order[ii-1]][current_order[ii]] +  
+		      double gone_edges_weight = pair_wise_distances[current_order[ii-1]][current_order[ii]] +
 			pair_wise_distances[current_order[jj-1]][current_order[jj]];
-		      
-		      /*  Block order2 
+
+		      /*  Block order2
 			  order 1: 1 2 3
 			  order 2: 2 1 3
-			  order 3: 1 3 2 
-		      */                    
+			  order 3: 1 3 2
+		      */
 		      int block_order_type = 0 ; // the default block order type
-                      
+
 		      double lightest_edges_weight = gone_edges_weight;
-                      
+
 		      bool flip_1 = false; //check if the orientation of the first block is flipped or not
-		      bool flip_2 = false; //check if the orientation of the second block is flipped or not 
+		      bool flip_2 = false; //check if the orientation of the second block is flipped or not
 		      bool flip_3 = false; //check if the orientation of the third block is flipped or not
-		      
+
 		      /* for block order type 1 */
 		      for (int ff1 = 0 ; ff1 < 2 ; ff1 ++)
                         {
@@ -167,7 +174,7 @@ void MSTOpt::local_improvement()
                             {
 			      for (int ff3 = 0 ; ff3 < 2 ; ff3++)
                                 {
-				  
+
 				  int end1 = current_order[ii-1];
 				  int end2 = current_order[ii];
 				  int end3 = current_order[jj-1];
@@ -175,7 +182,7 @@ void MSTOpt::local_improvement()
 				  if (ff1 == 1) end1 = current_order[0];
 				  if (ff2 == 1) { end2 = current_order[jj-1]; end3 = current_order[ii];}
 				  if (ff3 == 1) end4 = current_order[number_of_bins-1];
-                                  
+
 				  double current_edges_weight = pair_wise_distances[end1][end2] + pair_wise_distances[end3][end4];
 				  if (rnd(lightest_edges_weight) > rnd(current_edges_weight))
                                     {
@@ -186,9 +193,9 @@ void MSTOpt::local_improvement()
 				      if (ff3 == 0) flip_3 = false; else flip_3 = true;
                                     }
                                 }
-                            } 
+                            }
                         }
-		      
+
 		      /* for block order type 2 */
 		      for (int ff1 = 0 ; ff1 < 2 ; ff1 ++)
                         {
@@ -196,7 +203,7 @@ void MSTOpt::local_improvement()
                             {
 			      for (int ff3 = 0 ; ff3 < 2 ; ff3++)
                                 {
-				  
+
 				  int end1 = current_order[jj-1];
 				  int end2 = current_order[0];
 				  int end3 = current_order[ii-1];
@@ -204,9 +211,9 @@ void MSTOpt::local_improvement()
 				  if (ff2 == 1) end1 = current_order[ii];
 				  if (ff1 == 1) { end2 = current_order[ii-1]; end3 = current_order[0];}
 				  if (ff3 == 1) end4 = current_order[number_of_bins-1];
-                                  
+
 				  double current_edges_weight = pair_wise_distances[end1][end2] + pair_wise_distances[end3][end4];
-				  
+
 				  if (rnd(lightest_edges_weight) > rnd(current_edges_weight))
                                     {
 				      lightest_edges_weight = current_edges_weight;
@@ -216,9 +223,9 @@ void MSTOpt::local_improvement()
 				      if (ff3 == 0) flip_3 = false; else flip_3 = true;
                                     }
                                 }
-                            } 
+                            }
                         }
-		      
+
 		      /* for block order type 3 */
 		      for (int ff1 = 0 ; ff1 < 2 ; ff1 ++)
                         {
@@ -226,7 +233,7 @@ void MSTOpt::local_improvement()
                             {
 			      for (int ff3 = 0 ; ff3 < 2 ; ff3++)
                                 {
-				  
+
 				  int end1 = current_order[ii-1];
 				  int end2 = current_order[jj];
 				  int end3 = current_order[number_of_bins-1];
@@ -234,9 +241,9 @@ void MSTOpt::local_improvement()
 				  if (ff1 == 1) end1 = current_order[0];
 				  if (ff3 == 1) { end2 = current_order[number_of_bins-1]; end3 = current_order[jj];}
 				  if (ff2 == 1) end4 = current_order[jj-1];
-                                  
+
 				  double current_edges_weight = pair_wise_distances[end1][end2] + pair_wise_distances[end3][end4];
-				  
+
 				  if (rnd(lightest_edges_weight) > rnd(current_edges_weight))
                                     {
 				      lightest_edges_weight = current_edges_weight;
@@ -246,9 +253,9 @@ void MSTOpt::local_improvement()
 				      if (ff3 == 0) flip_3 = false; else flip_3 = true;
                                     }
                                 }
-                            } 
+                            }
                         }
-		      
+
 		      if (block_order_type == 1)
                         {
 			  if (flip_1)
@@ -270,7 +277,7 @@ void MSTOpt::local_improvement()
 		      else if (block_order_type == 2)
                         {
 			  copy_order(current_order,tmp_storage, 0 , 0, jj, false);
-                          
+
 			  if (flip_1)
                             {
 			      copy_order(tmp_storage, current_order,0,jj-ii,ii,true);
@@ -279,7 +286,7 @@ void MSTOpt::local_improvement()
                             {
 			      copy_order(tmp_storage, current_order,0,jj-ii,ii,false);
                             }
-			  
+
 			  if (flip_2)
                             {
 			      copy_order(tmp_storage, current_order,ii,0,jj-ii,true);
@@ -288,24 +295,24 @@ void MSTOpt::local_improvement()
                             {
 			      copy_order(tmp_storage, current_order,ii,0,jj-ii,false);
                             }
-			  
+
 			  if (flip_3)
                             {
 			      copy_order(current_order, tmp_storage,jj, jj, number_of_bins - jj, false);
 			      copy_order(tmp_storage, current_order, jj, jj, number_of_bins - jj, true);
-                            }                    
+                            }
                         }
 		      else if (block_order_type == 3)
                         {
-			  
+
 			  if (flip_1)
                             {
 			      copy_order(current_order, tmp_storage,0,0,ii,false);
 			      copy_order(tmp_storage,current_order,0,0,ii,true);
                             }
-			  
+
 			  copy_order(current_order,tmp_storage,ii,ii,number_of_bins-ii,false);
-                          
+
 			  if (flip_2)
                             {
 			      copy_order(tmp_storage, current_order, ii, number_of_bins - (jj-ii), jj - ii , true);
@@ -314,7 +321,7 @@ void MSTOpt::local_improvement()
                             {
 			      copy_order(tmp_storage, current_order, ii, number_of_bins - (jj-ii), jj - ii , false);
                             }
-			  
+
 			  if (flip_3)
                             {
 			      copy_order(tmp_storage, current_order, jj, ii, number_of_bins - jj, true);
@@ -324,27 +331,27 @@ void MSTOpt::local_improvement()
 			      copy_order(tmp_storage, current_order, jj, ii, number_of_bins - jj, false);
                             }
                         }
-		      
+
 		      if (block_order_type != 0)
                         {
 			  changed = true;
 			  current_upper_bound = current_upper_bound + lightest_edges_weight  - gone_edges_weight;
                         }
-		      
+
                     } // end for jj
                 } // end for ii
 	      if(verbose_) {
 		Rprintf("current upper_bound op2: %f\n", current_upper_bound);
 	      }
-            }//end inner while 
+            }//end inner while
 
 	  changed = dis_locate();
 
 	  if(verbose_) {
-	    Rprintf("current upper_bound dislocation: %f\n", current_upper_bound);        
+	    Rprintf("current upper_bound dislocation: %f\n", current_upper_bound);
 	  }
         } // end outer while
-    } // end if 
+    } // end if
 }
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -357,11 +364,11 @@ double MSTOpt::calculate_crt_upper_bound(){
 }
 ////////////////////////////////////////////////////////////////////////////////////////
 
-void MSTOpt::copy_order(vector<int> & order_from, 
-                        vector<int> & order_to, 
-                        int from_start_at, 
-                        int to_start_at, 
-                        int length, 
+void MSTOpt::copy_order(vector<int> & order_from,
+                        vector<int> & order_to,
+                        int from_start_at,
+                        int to_start_at,
+                        int length,
                         bool change_orientation) {
     if ( not change_orientation )
     {
@@ -387,10 +394,10 @@ bool MSTOpt::dis_locate()
   /* first is a pointer to previous element, second is the pointer to the next element*/
 
   //DB 10 Oct 2013
-  pair<int,int> *crt_order = NULL; 
+  pair<int,int> *crt_order = NULL;
   if(crt_order != NULL) delete crt_order;
   crt_order = new pair<int,int> [number_of_bins];
-  
+
   for (int ii = 0 ; ii < number_of_bins -1 ; ii++)
     {
       crt_order[current_order[ii]].second = current_order[ii+1];
@@ -402,8 +409,8 @@ bool MSTOpt::dis_locate()
     }
   crt_order[current_order[0]].first = -1;
   int header = current_order[0];
-  
-  
+
+
   bool ever_changed = false;
   bool changed = true;
   while (changed)
@@ -424,7 +431,7 @@ bool MSTOpt::dis_locate()
 	  if ((previous != -1) and (next != -1)) {
 	    incre_cost_splicing = incre_cost_splicing + pair_wise_distances[previous][next];
 	  }
-          
+
 	  int opt_pos = -1;
 	  double incre_cost_insertion = 0;
 	  if (header != ii) {
@@ -437,7 +444,7 @@ bool MSTOpt::dis_locate()
             {
 	      if ((jj != ii) and (jj != previous))
                 {
-		  double tmp_cost = 0 ;                    
+		  double tmp_cost = 0 ;
 		  int jj_next = crt_order[jj].second;
 		  tmp_cost = tmp_cost + pair_wise_distances[jj][ii];
 		  if (jj_next != -1)
@@ -451,7 +458,7 @@ bool MSTOpt::dis_locate()
 		      opt_pos = jj;
                     }
                 }
-	      
+
             }
 	  if ((incre_cost_insertion + incre_cost_splicing) < ZERO_MINUS )
             {
@@ -491,12 +498,12 @@ bool MSTOpt::dis_locate()
                     }
                 }
 	      current_upper_bound = current_upper_bound + incre_cost_insertion + incre_cost_splicing;
-            }            
-	  
+            }
+
         }
-      
+
     };
-  
+
   current_order[0] = header;
   int nxt_id = crt_order[header].second;
   for (int ii = 1 ; ii < number_of_bins  ; ii++)
@@ -511,9 +518,9 @@ bool MSTOpt::dis_locate()
   //  Rf_error("crt_cost <= current_upper_bound - ZERO_PLUS\n");
   //assert(crt_cost < current_upper_bound + ZERO_PLUS);
   //assert(crt_cost > current_upper_bound - ZERO_PLUS);
-  
+
   return ever_changed;
-  
+
 }
 /////////////////////////////////////////////////////////////////////////////////////
 
@@ -527,7 +534,7 @@ vector<int> MSTOpt::get_the_longest_path()
         graph_MST[jj].push_back(ii);
     }
     vector<int> longest_path;
-        
+
     int longest_distance = -1;
 
     /*Run BFS starting from every node*/
@@ -545,8 +552,8 @@ vector<int> MSTOpt::get_the_longest_path()
         {
             last_out = fifoqueue.front();
             fifoqueue.pop();
-            for (vector<int>::iterator iter1 = (graph_MST[last_out]).begin(); 
-                 iter1 != (graph_MST[last_out]).end(); 
+            for (vector<int>::iterator iter1 = (graph_MST[last_out]).begin();
+                 iter1 != (graph_MST[last_out]).end();
                  iter1 ++ )
             {
                 if (not visitted[*iter1])
@@ -578,7 +585,7 @@ vector<int> MSTOpt::get_the_longest_path()
 double MSTOpt::new_serialization()
 {
     vector<int> longest_path = get_the_longest_path();
-    
+
     vector<pair<int,int> > crt_path(number_of_bins,make_pair(-1,-1));
     if(verbose_){
       Rprintf("the length of the longest path: %d\n", longest_path.size());
@@ -596,7 +603,7 @@ double MSTOpt::new_serialization()
         crt_path[crt_node].second = jj;
         crt_node = jj;
     }
-    
+
     /*get the set of unvisitted nodes*/
 
     vector<bool> visitted(number_of_bins, false);
@@ -604,13 +611,13 @@ double MSTOpt::new_serialization()
     {
         visitted[longest_path[ii]] = true;
     }
-    
+
     /*now, insert the unvisited nodes into the backbone one by one*/
-    
+
     for (int ii = 0 ; ii < number_of_bins; ii++)
     {
         if (visitted[ii] == false)
-        {    
+        {
             visitted[ii] = true;
             double opt_cost = pair_wise_distances[ii][header] ;
             int opt_posi = -1;
@@ -650,8 +657,8 @@ double MSTOpt::new_serialization()
                     crt_path[kk].first = ii;
                 }
             }
-            
-            
+
+
         }
     }
 
@@ -664,13 +671,13 @@ double MSTOpt::new_serialization()
         crt_node_id = (crt_path[crt_node_id]).second;
     }
 
-    current_upper_bound = 0 ; 
+    current_upper_bound = 0 ;
     for (int ii = 1 ; ii < number_of_bins; ii ++)
     {
         current_upper_bound = current_upper_bound + pair_wise_distances[current_order[ii]][current_order[ii-1]];
     }
 
-    
+
     cost_after_initialization = current_upper_bound;
 
     return current_upper_bound;
@@ -712,25 +719,25 @@ MSTOpt::Block_Chain MSTOpt::break_into_blocks(){
             for (int jj = bs; jj < ii; jj++) {
                 block_markers.push_back(current_order[jj]);
             }
-            Block crt_block = {true, block_markers, block_markers.size(), 
+            Block crt_block = {true, block_markers, block_markers.size(),
                                block_markers[0], block_markers[block_markers.size() - 1],
                                -1, -1};
             bc.bs.push_back(crt_block);
             bs = ii;
-        } 
+        }
     }
     // assemble the last block
-    
+
     vector<int> last_block_markers;
     for (int jj = bs; jj < number_of_bins; jj++) {
         last_block_markers.push_back(current_order[jj]);
     }
-    Block last_block = {true, last_block_markers, 
-                        last_block_markers.size(), 
+    Block last_block = {true, last_block_markers,
+                        last_block_markers.size(),
                         last_block_markers[0], last_block_markers[last_block_markers.size() - 1],
                         -1, -1};
     bc.bs.push_back(last_block);
-    
+
     // do some correctness check
     int total_bins = 0;
     for (unsigned int ii = 0; ii < bc.bs.size(); ii++) {
@@ -744,7 +751,7 @@ MSTOpt::Block_Chain MSTOpt::break_into_blocks(){
     bc.bs[bc.bs.size() - 1].n_b = -1;
     bc.header = 0;
     return bc;
-    
+
 }
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -760,7 +767,7 @@ double MSTOpt::block_cost(const Block_Chain& bc){
         } else {
             from = bc.bs[pre_block].first;
         }
-        
+
         if (bc.bs[crt_block].orientation) {
             to = bc.bs[crt_block].first;
         } else {
@@ -840,7 +847,7 @@ void MSTOpt::block_fix_orientation(Block_Chain& bc) {
 ////////////////////////////////////////////////////////////////////////////////////
 
 bool MSTOpt::block_optimize_iteration(Block_Chain& bc){
-    // try to relocate every block to everywhere else 
+    // try to relocate every block to everywhere else
     // return true if this operation improves the order
     int total_blocks = bc.bs.size();
     if(verbose_){
@@ -852,7 +859,7 @@ bool MSTOpt::block_optimize_iteration(Block_Chain& bc){
     // print_bc(bc);
 
     double total_incremental_cost = 0.0;
-    
+
     vector<Block>& bs = bc.bs;
     for (int ii = 0; ii < total_blocks; ii++) {
         Block& crt_block = bs[ii];
@@ -917,7 +924,7 @@ bool MSTOpt::block_optimize_iteration(Block_Chain& bc){
 
         // cout << "one_block is spliced out" << endl;
         // print_bc(bc);
-        
+
         // now try to find the optimum position for crt_block
         // first try to put the block at the begining
         int opt_pos = -1;
@@ -930,7 +937,7 @@ bool MSTOpt::block_optimize_iteration(Block_Chain& bc){
         } else {
             to = bs[bc.header].last;
         }
-        
+
         if (pair_wise_distances[crt_block.first][to] < pair_wise_distances[crt_block.last][to]) {
             opt_cost = pair_wise_distances[crt_block.first][to];
             opt_orientation = false;
@@ -938,7 +945,7 @@ bool MSTOpt::block_optimize_iteration(Block_Chain& bc){
             opt_cost = pair_wise_distances[crt_block.last][to];
             opt_orientation = true;
         }
-        
+
         for (int jj = 0; jj < total_blocks; jj++) {
             if (jj == ii) continue;
             // check the forward direction first
@@ -975,7 +982,7 @@ bool MSTOpt::block_optimize_iteration(Block_Chain& bc){
                 additional_cost = additional_cost2;
                 jj_orientation = false;
             }
-            
+
             if (additional_cost < opt_cost) {
                 opt_cost = additional_cost;
                 opt_pos = jj;
@@ -1000,7 +1007,7 @@ bool MSTOpt::block_optimize_iteration(Block_Chain& bc){
         total_incremental_cost = total_incremental_cost + opt_cost - cost_reduction;
         // cout << "the block has been put back" << endl;
         // print_bc(bc);
-    }  
+    }
     // assert(new_cost < original_cost + total_incremental_cost + ZERO_PLUS);
     // assert(new_cost > original_cost + total_incremental_cost - ZERO_PLUS);
     if(verbose_){
@@ -1102,28 +1109,28 @@ void MSTOpt::print_bc(const Block_Chain& bc){
             } else {
 	      Rprintf("0.0\t");
             }
-            
+
             crt_ind2 = bc.bs[crt_ind2].n_b;
         }
         Rprintf("\n");
         crt_ind1 = bc.bs[crt_ind1].n_b;
     }
-    
+
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool MSTOpt::block_optimize() {
     Block_Chain bc = break_into_blocks();
     int number_of_blocks = bc.bs.size();
-    
+
     // if there is no reduction of the problem size. return false
     if (number_of_blocks == number_of_bins) {
         return false;
     }
-    
+
     vector<vector<double> > block_distance;
     contract_blocks(bc, block_distance);
-    
+
     /*
     // print out some debugging information
     cout << "print out debugging information" << endl;
@@ -1148,7 +1155,7 @@ bool MSTOpt::block_optimize() {
     double b_upperbound;
     double b_initial_cost;
     b_opt.Opt_Order(b_opt_order, b_mst, b_lowerbound, b_upperbound, b_initial_cost);
-    
+
     /*
     cout << "print out the order after optimization " << endl;
     for (int ii = 0; ii < number_of_blocks; ii++) {
@@ -1164,7 +1171,7 @@ bool MSTOpt::block_optimize() {
     cout << "total distance after optimization:" << ttl_b_dist2 << endl;
     */
 
-    
+
     // re-organize the blocks
     for (int ii = 1; ii < number_of_blocks; ii++) {
         bc.bs[b_opt_order[ii]].p_b = b_opt_order[ii - 1];
@@ -1175,28 +1182,28 @@ bool MSTOpt::block_optimize() {
     bc.bs[b_opt_order[0]].p_b = -1;
     bc.bs[b_opt_order[number_of_blocks - 1]].n_b = -1;
     bc.header = b_opt_order[0];
-    
+
     block_fix_orientation(bc);
-    
+
     bool changed = true;
     while (changed) {
         changed = block_optimize_iteration(bc);
     }
-    
+
     vector<int> backup_order;
     backup_order = current_order;
     double backup_upper_bound = current_upper_bound;
     copy_over_order(bc);
-    
+
     local_improvement();
-    
+
     double new_upper_bound = calculate_crt_upper_bound();
-    
+
     if(verbose_){
       Rprintf("backup_upper_bound: %f new_upper_bound: %f\n",
-	      backup_upper_bound, new_upper_bound); 
+	      backup_upper_bound, new_upper_bound);
     }
-    
+
     bool improved = false;
     if (new_upper_bound < backup_upper_bound - ZERO_PLUS) {
         improved = true;
@@ -1211,8 +1218,8 @@ bool MSTOpt::block_optimize() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void MSTOpt::Opt_Order(vector<int>& out_order,
                        vector<int>& _MST,
-                       double & _lowerbound, 
-                       double & _upper_bound, 
+                       double & _lowerbound,
+                       double & _upper_bound,
                        double & _cost_after_initialization) {
     out_order = current_order;
     _MST = MST;
@@ -1226,7 +1233,7 @@ void MSTOpt::Opt_Order(vector<int>& out_order,
 // perform a sanity check of the result obtained.
 void MSTOpt::sanity_check(){
     /*Consistency checking*/
-    
+
     /*Step 1: check that the current order is valid*/
     vector<int> tmp(number_of_bins,0);
     for (int ii = 0 ; ii < number_of_bins; ii++)
@@ -1241,7 +1248,7 @@ void MSTOpt::sanity_check(){
 	  //assert(false); // crash the program on error
         }
     }
-    
+
     double epsilon = 0.000001;
     /*Step 2: check that the current upper_bound is also correct*/
     double tmp_upper_bound = 0 ;
@@ -1249,15 +1256,15 @@ void MSTOpt::sanity_check(){
     {
         tmp_upper_bound = tmp_upper_bound + pair_wise_distances[current_order[ii]][current_order[ii-1]];
     }
-    
+
     if (not ((tmp_upper_bound - current_upper_bound < epsilon) and (tmp_upper_bound - current_upper_bound > -epsilon))){
       Rf_error("ERROR, current_upper_bound is not correct: tmp_upper_bound: %f upper_bound: %f\n",
 	       tmp_upper_bound, current_upper_bound);
       //assert(false); // crash the program on error
     }
-    
+
     /*Step 3: make sure that the lowerbound is calculated correctly*/
-    double tmp_lower_bound = 0 ; 
+    double tmp_lower_bound = 0 ;
     for (int ii = 1 ; ii < number_of_bins; ii ++)
     {
         tmp_lower_bound = tmp_lower_bound + pair_wise_distances[MST[ii]][ii];
@@ -1267,6 +1274,6 @@ void MSTOpt::sanity_check(){
 	       tmp_lower_bound,MST_lower_bound);
       //assert(false); // crash the program on error
     }
-    
+
 }
 ///////////////////////////////////////////////////////////////////////////////////////

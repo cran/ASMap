@@ -23,7 +23,7 @@ The cM gap to put between the merged map elements in the complete linkage group.
 }
 \details{
 This merging function allows you to perform multiple merges of two or more linkage groups
-in one call. User should ensure linkage group names are correct and
+in one call. Users should ensure linkage group names are correct and
 that proposed linkage group names do not already exist.
 }
 \value{

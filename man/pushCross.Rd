@@ -85,7 +85,7 @@ be tweaked by setting \code{max.rf} and \code{min.lod} when calling
 \code{pars}. These currently default to \code{max.rf = 0.25} and
 \code{min.lod = 3}.
 
-User should explicitly avoid the use of "UL" as part of a linkage group name as
+Users should explicitly avoid the use of "UL" as part of a linkage group name as
 this is used internally to name unlinked groups of markers if required.
 It should also be noted that this function does not re-construct the
 object after allocating markers to linkage groups. For efficient linkage map
