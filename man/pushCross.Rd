@@ -1,6 +1,5 @@
 \name{pushCross}
 \alias{pushCross}
-\alias{push}
 \title{
 Push markers into an established R/qtl linkage map.
 }

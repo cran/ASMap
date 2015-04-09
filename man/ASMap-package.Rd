@@ -1,6 +1,5 @@
 \name{ASMap-package}
 \alias{ASMap-package}
-\alias{ASMap}
 \docType{package}
 \title{
 Additional functions for linkage map construction and manipulation of R/qtl
@@ -15,11 +14,11 @@ ordering using MSTmap (see Wu et al., 2008).
 \tabular{ll}{
 Package: \tab ASMap\cr
 Type: \tab Package\cr
-Version: \tab 0.3-3\cr
-Date: \tab 2014-08-20\cr
+Version: \tab 0.4\cr
+Date: \tab 2015-04-09\cr
 License: \tab GPL 2\cr
 }
-Welcome to the first release version of the ASMap package!
+Welcome to the ASMap package!
 
 One of the fundamental reasons why this package exists was to utilize
 and implement the source code for the the Minimum Spanning Tree
@@ -68,8 +67,13 @@ Other miscellaneous utilities for \pkg{qtl} objects include
   \item \code{fixClones}: Consensus genotypes for clonal groups 
 }
 
-A comprehensive vignette showcasing the package will be available
-shortly!
+A comprehensive vignette showcasing the package is now available! It
+contains detailed explanations of the functions in the package and how
+they can be used to perform efficient map construction. There is a fully
+worked example that involves pre-construction diagnostics, linkage map
+construction and post construction diagnostics. This example also shows
+how functions of the package can be used for post linkage map
+construction techniques such as fine mapping and combining linkage maps. 
 }
 \author{
 Julian Taylor, Dave Butler, Timothy Close, Yonghui Wu, Stefano Lonardi

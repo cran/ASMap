@@ -40,7 +40,7 @@ which determines the clonal group the pair of genotypes belongs to.
 Julian Taylor
 }
 \seealso{
-\code{\link[qtl]{comparegeno}}
+\code{\link[qtl]{comparegeno}} and \code{\link{fixClones}}
 }
 \examples{
 

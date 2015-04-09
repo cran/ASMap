@@ -1,6 +1,5 @@
 \name{pullCross}
 \alias{pullCross}
-\alias{pull}
 \title{
 Pull markers from a linkage map.
 }

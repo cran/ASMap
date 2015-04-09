@@ -93,7 +93,6 @@ mstmap.cross <- function(object, chr, id = "Genotype", bychr = TRUE, suffix = "n
             }, imf, mf)
         }
         chrw <- nm[i]
-        print(chrw)
         nmm <- names(object$geno[[chrw]]$map)
         if(anchor)
             mst <- lapply(mst, function(el, nmm){
@@ -547,9 +546,10 @@ quickEst <- function(object, chr, map.function = "kosambi", ...){
         stop("Input should have class \"cross\".")
     if (missing(chr))
         chr <- names(nmar(object))
+    nm <- nmar(object)[chr]
+    chr <- chr[nm > 1]
     imf <- switch(map.function, kosambi = imf.k, haldane = imf.h,
                   morgan = imf.m, cf = imf.cf)
-    nm <- nmar(object)
     for(i in chr){
         temp <- subset(object, chr = i)
         est <- est.rf(temp)$rf
@@ -590,6 +590,10 @@ genClones <- function(object, chr, tol = 0.9, id = "Genotype"){
     cgm <- cg <- comparegeno(object)
     cg[upper.tri(cg, diag = TRUE)] <- NA
     wh <- which(cg > tol, arr.ind = TRUE)
+    if(dim(wh)[1] == 0){
+        message("There are no genotype pairs with matching allele proportions greater than ", tol,".")
+        return(list(cgm = cgm))
+    }
     ind1 <- wh[,1]; ind2 <- wh[,2]
     cgd <- cbind.data.frame(G1 = gnam[ind1], G2 = gnam[ind2])
     cgd$coef <- round(cg[wh], 4)
