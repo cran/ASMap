@@ -546,21 +546,26 @@ quickEst <- function(object, chr, map.function = "kosambi", ...){
         stop("Input should have class \"cross\".")
     if (missing(chr))
         chr <- names(nmar(object))
-    nm <- nmar(object)[chr]
-    chr <- chr[nm > 1]
     imf <- switch(map.function, kosambi = imf.k, haldane = imf.h,
                   morgan = imf.m, cf = imf.cf)
+    nm <- nmar(object)
     for(i in chr){
         temp <- subset(object, chr = i)
         est <- est.rf(temp)$rf
         nc <- dim(est)[1]
         er <- est[cbind(2:nc,1:(nc - 1))]
-        object$geno[[i]]$map <- c(0,cumsum(imf(er)))
+        temp$geno[[i]]$map <- c(0,cumsum(imf(er)))
+        names(temp$geno[[i]]$map) <- dimnames(temp$geno[[i]]$data)[[2]]
+        tempa <- argmax.geno(temp, step = 0, map.function = map.function, ...)
+        tempa$geno[[i]]$data <- tempa$geno[[i]]$argmax
+        tempa$geno[[i]] <- tempa$geno[[i]][-3]
+        esta <- est.rf(tempa)$rf
+        era <- esta[cbind(2:nc,1:(nc - 1))]
+        if(class(object)[1] == "riself")
+            era <- (era/2)/(1 - era)
+        object$geno[[i]]$map <- c(0,cumsum(imf(era)))
         names(object$geno[[i]]$map) <- dimnames(object$geno[[i]]$data)[[2]]
     }
-    aobject <- argmax.geno(object, step = 0, map.function = map.function, ...)
-    for(i in chr)
-        object$geno[[i]]$map <- attr(aobject$geno[[i]]$argmax, "map")
     object
 }
 
@@ -1243,7 +1248,7 @@ profileMark <- function(cross, chr, stat.type = "marker", use.dist = TRUE, map.f
             critm <- mn
             logmc <- 10^(-nlp) > crit.val
             critm[logmc] <- ""
-            stato$mark$crit.val <- logmc
+            stato$marker$crit.val <- logmc
             stat$marker$mark <- rep(critm, length(mnam))
         }
     }
