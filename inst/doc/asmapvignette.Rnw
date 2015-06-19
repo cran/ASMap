@@ -233,7 +233,7 @@ package.
 
 Following the notation of \cite{mst08} consider a Doubled
 Haploid population of $n$ individuals genotyped across a set of $t$
-markers where each $(i,j)$th entry of the $n \times t$ matrix $\vec{M}$
+markers where each $(j,k)$th entry of the $n \times t$ matrix $\vec{M}$
 is either an $A$ or a $B$ representing the two parental
 homozygotes in the population. Let $\vec{P}_{jk}$ be the probability
 of a recombination event between the markers $(\vec{m}_j,

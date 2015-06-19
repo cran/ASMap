@@ -27,6 +27,13 @@
 }
 \subsection{BUG FIXES}{
   \itemize{
+     \item Fixed bug that returned inflated distances for \code{"ARIL"}
+     populations when using \code{mstmap.data.frame()}.
+     \item If the constructed map contained linkage groups with one
+      marker \code{profileMark()} graphically displaced the interval
+      statistics. This has now been amended.
+     \item \code{pushCross()} can now push large volumes of co-located
+      markers back into the constructed map very efficiently.   
     \item \code{profileMark()} was not outputting \code{crti.val} column
       when \code{crit.val = "bonf"} argument was chosen. This has now
       been amended.

@@ -339,7 +339,7 @@ mstmap.data.frame <- function(object, pop.type= "DH", dist.fun = "kosambi",
             nams <- names(el)
             rf <- mf(diff(el))
             rf <- (rf/2)/(1 - rf)
-            el <- cumsum(c(0, imf(el)))
+            el <- cumsum(c(0, imf(rf)))
             names(el) <- nams
             el
         }, imf, mf)
@@ -692,15 +692,17 @@ fixClones <- function(object, gc, id = "Genotype", consensus = TRUE){
 }
 
 pp.init <- function(seg.thresh = 0.05, seg.ratio = NULL, miss.thresh = 0.1, max.rf = 0.25, min.lod = 3){
-       if(!(is.numeric(seg.thresh) | is.character(seg.thresh)))
-           stop("seg.thresh argument of wrong type, see ?pullCross pr ?pushCross.")
-       if(is.character(seg.thresh)){
-           if(seg.thresh != "bonf")
-               stop("seg.thresh argument can only be numeric or equal to \"bonf\", see ?pullCross or ?pushCross")
-       }
-       if(is.numeric(seg.thresh)){
-           if(seg.thresh >= 1 | seg.thresh < 0 )
-               stop("seg.thresh cannot exceed 1 and must be between 0 and 1")
+       if(!is.null(seg.thresh)){
+           if(!(is.numeric(seg.thresh) | is.character(seg.thresh)))
+               stop("seg.thresh argument of wrong type, see ?pullCross pr ?pushCross.")
+           if(is.character(seg.thresh)){
+               if(seg.thresh != "bonf")
+                   stop("seg.thresh argument can only be numeric or equal to \"bonf\", see ?pullCross or ?pushCross")
+           }
+           if(is.numeric(seg.thresh)){
+               if(seg.thresh >= 1 | seg.thresh < 0 )
+                   stop("seg.thresh cannot exceed 1 and must be between 0 and 1")
+           }
        }
        if(!is.null(seg.ratio)){
            seg.thresh <- NULL
@@ -843,20 +845,27 @@ pushCross <- function(object, type = c("co.located","seg.distortion","missing","
         }
         chrn <- rep(names(nmar(object)), times = nmar(object))
         nb <- sapply(bm, nrow)
-#        chrn <- chrn[mnam %in% om]
         chrn <- chrn[pmatch(om, mnam)]
-        for(i in 1:length(bm)){
-            chr <- chrn[i]
-            omap <- object$geno[[chr]]$map
-            whm <- (1:length(omap))[names(omap) == bm[[i]]$mark[1]]
-            nmap <- c(omap[1:whm], rep(omap[whm], length(bm[[i]]$mark) - 1))
-            if(length(omap) != whm)
-                nmap <- c(nmap, omap[(whm + 1):length(omap)])
-            names(nmap)[(whm + 1):(whm + length(bm[[i]]$mark) - 1)] <- as.character(bm[[i]]$mark)[-1]
-            whc <- dimnames(odat)[[2]] %in% as.character(bm[[i]]$mark)[-1]
-            object$geno[[chr]]$data <- cbind(object$geno[[chr]]$data, odat[,whc, drop = FALSE])
-            object$geno[[chr]]$data <- object$geno[[chr]]$data[,names(nmap)]
-            object$geno[[chr]]$map <- nmap
+        uc <- unique(chrn)
+        for(i in uc){
+            bmc <- bm[chrn %in% i]
+            markc <- as.character(unlist(sapply(bmc, function(el) el$mark[2:length(el$mark)])))
+            omap <- object$geno[[i]]$map
+            for (j in 1:length(bmc)){
+                whm <- (1:length(omap))[names(omap) == bmc[[j]]$mark[1]]
+                nmap <- c(omap[1:whm], rep(omap[whm], length(bmc[[j]]$mark) -
+                                           1))
+                if (length(omap) != whm)
+                    nmap <- c(nmap, omap[(whm + 1):length(omap)])
+                names(nmap)[(whm + 1):(whm + length(bmc[[j]]$mark) -
+                                       1)] <- as.character(bmc[[j]]$mark)[-1]
+                omap <- nmap
+            }
+            whc <- dimnames(odat)[[2]] %in% markc
+            object$geno[[i]]$data <- cbind(object$geno[[i]]$data,
+                                             odat[, whc, drop = FALSE])
+            object$geno[[i]]$data <- object$geno[[i]]$data[, names(nmap)]
+            object$geno[[i]]$map <- omap
         }
         object <- fixObject(object, type)
         return(object)
@@ -1201,6 +1210,7 @@ profileMark <- function(cross, chr, stat.type = "marker", use.dist = TRUE, map.f
         stop("This function is not suitable for this population type, see ?profileMark.")
     if (!missing(chr))
         cross <- subset(cross, chr)
+    cross$geno <- cross$geno[mixedorder(names(nmar(cross)))]
     stypes <- c("seg.dist","miss","prop","dxo","erf","lod","dist","mrf","recomb")
     mtypes <- c("marker","interval")
     if(any(!(stat.type %in% c(mtypes, stypes))))
