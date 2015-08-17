@@ -3,7 +3,11 @@ import(
 qtl,
 gtools,
 fields,
-lattice)
+RColorBrewer,
+lattice,
+grDevices,
+graphics,
+stats)
 
 ##[exports]
 export(

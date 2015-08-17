@@ -10,6 +10,9 @@
 }
   \subsection{NEW FEATURES}{
     \itemize{
+      \item The heat map in the package now uses a diverging colour
+      palette chosen from the default palettes available in
+      \pkg{RColorBrewer}.
       \item The package now includes a PDF vignette. This can be found
       on any operating system using the command
 

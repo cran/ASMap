@@ -1,5 +1,5 @@
 %\VignetteIndexEntry{Efficient linkage map construction using R/ASMap}
-%\VignetteEngine{knitr::knitr}
+% \VignetteEngine{knitr::knitr}
 \documentclass[oneside,12pt]{book}
 
 \usepackage[knit]{SAGI}
@@ -233,7 +233,7 @@ package.
 
 Following the notation of \cite{mst08} consider a Doubled
 Haploid population of $n$ individuals genotyped across a set of $t$
-markers where each $(j,k)$th entry of the $n \times t$ matrix $\vec{M}$
+markers where each $(i,j)$th entry of the $n \times t$ matrix $\vec{M}$
 is either an $A$ or a $B$ representing the two parental
 homozygotes in the population. Let $\vec{P}_{jk}$ be the probability
 of a recombination event between the markers $(\vec{m}_j,
@@ -835,12 +835,15 @@ individuals in the population and the upper limit of 12 may be a
 vastly inadequate representation of the pairwise linkage between some
 markers. In Figure \ref{fig:heat1} this latter inadequacy is displayed as
 red or hot areas of linkage between markers that should otherwise be cooler
-colours. In addition, the actual estimated recombination fractions are
+colours. Additionally, the actual estimated recombination fractions are
 not displayed in the upper triangle of the heat map and colour legends
-matching the numerical LOD and RF's are not present.
+matching the numerical LOD and RF's are not present. From a visual
+standpoint, it is well known the rainbow colour spectrum is perceptually inadequate for
+representing diverging numerical data.
 
 R/ASMap contains an improved version of the heat map called
-\code{heatMap()} that rectifies these issues.
+\code{heatMap()} that rectifies the numerical and visual issues of the
+\pkg{qtl} heat map.
 <<heat1,eval=FALSE,echo=TRUE>>=
 heatMap(x, chr, mark, what = c("both", "lod", "rf"), lmax = 12,
              rmin = 0, markDiagonal = FALSE, color = rev(rainbow(256, start =
@@ -859,7 +862,11 @@ example, Figure \ref{fig:heat2} shows the \code{heatMap()} equivalent of
 heatMap(mapDH, lmax = 50)
 @
 
-The instantly visible difference between the figures is the legend for the LOD score
+The instantly visual difference between the figures is the chosen
+colour palette. R/ASMap uses a diverging colour palette \code{"Spectral"}
+from the default color palettes of \pkg{RColorBrewer}. The palette
+softens the plot and provides a gentle dinstinction between strongly
+linked and weakly linked markers. The plot also includes a legend for the LOD score
 and recombination fractions on either side of Figure \ref{fig:heat2}. As the
 estimated recombination fractions are being freely plotted without
 transformation, the complete scale is included in the heat map. This

@@ -11,8 +11,8 @@ R/qtl \code{plot.rf} function.
 }
 \usage{
 heatMap(x, chr, mark, what = c("both", "lod", "rf"), lmax = 12,
-        rmin = 0, markDiagonal = FALSE, color = rev(rainbow(256, start =
-        0, end = 2/3)), \ldots)
+   rmin = 0, markDiagonal = FALSE, color =
+rev(colorRampPalette(brewer.pal(11,"Spectral"))(256)),  \ldots)
 }
 \arguments{
 \item{x}{
@@ -50,7 +50,7 @@ elements of the heat map.
 }
 \item{color}{
 The colour spectrum used to display the heat map. The default is the
-first two thirds of \code{rainbow()} (see Details).
+\code{"Spectral"} diverging palette from the \pkg{RColorBrewer} package (see Details).
 }
 \item{\ldots}{
 There are additional features available through this argument that
@@ -75,10 +75,10 @@ heat map and the pairwise estimated recombination fractions are
 displayed on the upper triangle. If this option is chosen, legends are displayed for both
 components of the heat map.
 
-The default colour spectrum is the first two thirds of
-\code{rainbow()}. This colour spectrum matches the one in
-\code{plot.rf} and provides an aesthetically pleasing palette for the
-diagnosis of pairwise linkage between markers. Specifically, the color spectrum
+The default colour spectrum is the diverging palette \code{"Spectral"}
+from the \pkg{RcolorBrewer} package. This diverging palette
+provides an aesthetically pleasing colour spectrum for the
+diagnosis of pairwise linkage between markers. Specifically, the palette
 displays weak linkage and/or low recombination between markers as blue
 or "cool" areas and strong linkage and/or recombination between markers are
 shown as red or "hot" areas.

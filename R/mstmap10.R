@@ -406,7 +406,7 @@ mstmap.data.frame <- function(object, pop.type= "DH", dist.fun = "kosambi",
 }
 
 heatMap <- function (x, chr, mark, what = c("both", "lod", "rf"),
-  lmax = 12, rmin = 0, markDiagonal = FALSE, color = rev(rainbow(256, start = 0, end = 2/3)), ...)
+  lmax = 12, rmin = 0, markDiagonal = FALSE, color = rev(colorRampPalette(brewer.pal(11,"Spectral"))(256)), ...)
 {
     opar <- par(no.readonly = TRUE)
     if (!inherits(x, "cross"))
