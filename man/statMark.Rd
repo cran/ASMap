@@ -62,7 +62,7 @@ data(mapDH, package = "ASMap")
 
 ## produce all statistics
 
-statMark(mapDH, stat.type = c("marker","interval"))
+sm <- statMark(mapDH, stat.type = c("marker","interval"))
 
 }
 \keyword{misc}

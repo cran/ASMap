@@ -253,7 +253,7 @@ int linkage_group_DH::detect_bad_markers(){
 	distances.push_back(make_pair(pair_wise_distances[ii][jj], jj));
       }
     }
-    if(distances.size() != (number_of_bins - 1))
+    if(distances.size() != ((unsigned int)number_of_bins - 1))
       Rf_error("distances.size() != (number_of_bins - 1)\n");
     //assert(distances.size() == (number_of_bins - 1));
     sort(distances.begin(), distances.end());
@@ -460,7 +460,7 @@ void linkage_group_DH::estimate_missing_data(){
                 distances.push_back(make_pair(pair_wise_distances[ii][jj], jj));
             }
         }
-       if(distances.size() != (number_of_bins - 1))
+	if(distances.size() != ((unsigned int)number_of_bins - 1))
 	 Rf_error("distances.size() != (number_of_bins - 1)\n");
        //assert(distances.size() == (number_of_bins - 1));
         sort(distances.begin(), distances.end());

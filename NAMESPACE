@@ -1,5 +1,6 @@
 ## imports
 import(
+stats,
 qtl,
 gtools,
 fields,
@@ -28,7 +29,8 @@ pp.init,
 statGen,
 profileGen,
 statMark,
-profileMark)
+profileMark,
+alignCross)
 
 ##[S3 Methods]
 S3method(mstmap, default)

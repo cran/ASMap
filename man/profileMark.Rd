@@ -116,7 +116,8 @@ data(mapDH, package = "ASMap")
 
 ## profile chosen statistics
 
-profileMark(mapDH, stat.type = c("seg.dist","prop","erf"))
+profileMark(mapDH, stat.type = c("seg.dist","prop","erf"), layout =
+      c(1,4), type = "l")
 
 }
 \keyword{misc}

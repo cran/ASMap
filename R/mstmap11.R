@@ -1018,7 +1018,7 @@ combineMap <- function(..., id = "Genotype", keep.all = TRUE){
     nams <- mapm[[id]]
     mxo <- mixedorder(nams)
     mapm <- mapm[mxo,]
-    phem <- phem[mixedorder(phem[[id]]),,drop = FALSE]
+    phem <- phem[mixedorder(as.character(phem[[id]])),,drop = FALSE]
     mapm <- mapm[,!(names(mapm) %in% id)]
     spl.m <- strsplit(names(mapm), ";")
     ch <- sapply(spl.m, "[", 1)
@@ -1424,4 +1424,77 @@ profileGen <- function(cross, chr, bychr = TRUE, stat.type = c("xo","dxo","miss"
     invisible(list(stat = cnt, xo.lambda = xo.lambda))
 }
 
-
+alignCross <- function(object, chr, maps, ...){
+    if (class(object)[2] != "cross")
+        stop("object should have class \"cross\".")
+    if(missing(maps))
+        stop("map argument cannot be missing.")
+    call <- match.call()
+    mp <- deparse(call$maps)
+    if(!grep("list", mp))
+        stop("maps argument must be a list of maps")
+    mapn <- names(maps)
+    if(any(mapn %in% "") | is.null(mapn)){
+        warning("Some maps have not been named .. using map object name.")
+        mp <- substring(mp, 6, nchar(mp) - 1)
+        mp <- gsub(" ", "", mp)
+        mp <- strsplit(mp, ",")[[1]]
+        if(length(mp) > 1){
+            gp <- grep("=", mp)
+            if(length(gp))
+                ind <- (1:length(mp))[-grep("=",mp)]
+            else ind <- (1:length(mp))
+        }
+        else ind <- 1
+        mapn[ind] <- mp[ind]
+    }
+    if(!missing(chr))
+        object <- subset(object, chr = chr)
+    maps <- lapply(maps, function(el){
+            if(class(el)[2] %in% "cross"){
+                mn <- markernames(el)
+                ref.chr <- rep(names(nmar(el)), times = nmar(el))
+                ref.dist <- unlist(pull.map(el))
+                cbind.data.frame(marker = mn, ref.chr = ref.chr, ref.dist = ref.dist)
+            } else if(class(el)[1] %in% "data.frame"){
+                nms <- c("marker", "ref.chr", "ref.dist")
+                if(!all(nms %in% names(el)))
+                    stop("One of \"marker\", \"ref.chr\", \"ref.dist\" could not be found in data frame.")
+                el[,nms]
+            } else stop("All maps must inherit class \"cross\" or \"data.frame\".")
+        })
+    mo <- pull.map(object)
+    nm <- nmar(object)
+    ldat <- list()
+    for(i in 1:length(mo)){
+        mt <- mo[[i]]
+        con <- lapply(maps, function(el, mt){
+            pm <- match(names(mt), el$marker)
+            md <- mt[!is.na(pm)]
+            pm <- pm[!is.na(pm)]
+            if(!length(pm)) NULL
+            else {
+                el <- el[pm,]
+                el$map.dist <- md
+                el
+            }
+        }, mt)
+        names(con) <- paste("Ref: ", mapn, sep = "")
+        con <- con[!sapply(con, is.null)]
+        if(length(con)){
+            nr <- sapply(con, nrow)
+            ldat[[i]] <- do.call("rbind.data.frame", con)
+            ldat[[i]]$map.chr <- names(nm)[i]
+            ldat[[i]] <- cbind(map = rep(names(con), times = nr), ldat[[i]])
+        }
+    }
+    fdat <- do.call("rbind.data.frame", ldat)
+    rownames(fdat) <- NULL
+    fdat$map.chr <- factor(fdat$map.chr, levels = names(object$geno))
+    print(xyplot(map.dist ~ ref.dist | map.chr*map, groups = fdat$ref.chr, data = fdat,
+                 scales = list(relation = "free"),  xlab = "Reference distance", ylab = "Map distance",
+                 panel = panel.superpose,
+                 panel.groups = function(x, y, subscripts = subscripts, labs = as.character(fdat$ref.chr), ...)
+                 panel.text(x, y, labels = labs[subscripts], ...), ...))
+    invisible(fdat)
+}

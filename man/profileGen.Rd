@@ -74,7 +74,8 @@ data(mapDH, package = "ASMap")
 
 ## profile all genotype crossover and double crossover statistics
 
-profileGen(mapDH, stat.type = c("xo","dxo"), xo.lambda = 25)
+profileGen(mapDH, bychr = FALSE, stat.type = c("xo","dxo"),
+     xo.lambda = 25, layout = c(1,3))
 
 }
 \keyword{misc}

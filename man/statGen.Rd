@@ -56,7 +56,7 @@ data(mapDH, package = "ASMap")
 
 ## produce all genotype crossover and double crossover statistics
 
-statGen(mapDH, stat.type = c("xo","dxo"))
+sg <- statGen(mapDH, stat.type = c("xo","dxo"))
 
 }
 \keyword{misc}

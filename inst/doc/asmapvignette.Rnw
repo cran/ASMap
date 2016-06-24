@@ -1,6 +1,6 @@
-%\VignetteIndexEntry{Efficient linkage map construction using R/ASMap}
-% \VignetteEngine{knitr::knitr}
 \documentclass[oneside,12pt]{book}
+%\VignetteIndexEntry{Efficient linkage map construction using R/ASMap}
+%\VignetteEngine{knitr::knitr}
 
 \usepackage[knit]{SAGI}
 \usepackage{tabu}

@@ -10,6 +10,8 @@
 }
   \subsection{NEW FEATURES}{
     \itemize{
+      \item The package now contains a function to assist in identifying
+      and orienting linkage groups (see \code{?alignCross}).      
       \item The heat map in the package now uses a diverging colour
       palette chosen from the default palettes available in
       \pkg{RColorBrewer}.
@@ -30,6 +32,8 @@
 }
 \subsection{BUG FIXES}{
   \itemize{
+    \item Fixed a nasty bug in \code{combineMap()} that switched
+      genotype names for certain linkage maps
      \item Fixed bug that returned inflated distances for \code{"ARIL"}
      populations when using \code{mstmap.data.frame()}.
      \item If the constructed map contained linkage groups with one
