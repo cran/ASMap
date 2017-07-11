@@ -15,6 +15,11 @@
     \code{read.cross()} documentation for more details on the
   format of this object.
 }
+\references{
+Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+Linkage Map Construction and Diagnosis. Journal of Statistical Software,
+\bold{79}(6), 1--29.
+}
 \examples{
 
 data(mapBC, package = "ASMap")

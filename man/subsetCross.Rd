@@ -43,10 +43,15 @@ recalculated.
 
 It provides identical functionality to \code{subset.cross}
 with the exception that \code{ind} can only be a logical or numeric
-vector. 
+vector.
 }
 \value{
 The cross object is returned with the appropriate subsetting.
+}
+\references{
+Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+Linkage Map Construction and Diagnosis. Journal of Statistical Software,
+\bold{79}(6), 1--29.
 }
 \author{
 Julian Taylor

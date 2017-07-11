@@ -4,7 +4,7 @@
 Find and report genotype clones
 }
 \description{
-Find and report genotype clones for R/qtl objects. 
+Find and report genotype clones for R/qtl objects.
 }
 \usage{
 genClones(object, chr, tol = 0.9, id = "Genotype")
@@ -35,6 +35,11 @@ A list is returned with the matrix from \code{comparegeno} as an element
 \code{cgm} and the breakdown statistics for returned genotype pairs in
 \code{cgd}. Specifically, the statistics contain a \code{"group"} column
 which determines the clonal group the pair of genotypes belongs to.
+}
+\references{
+Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+Linkage Map Construction and Diagnosis. Journal of Statistical Software,
+\bold{79}(6), 1--29.
 }
 \author{
 Julian Taylor

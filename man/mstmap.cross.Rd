@@ -60,10 +60,10 @@ recombination events between markers and \code{"ML"} for maximising the
 likelihood objective function. Default is \code{"COUNT"}.
 }
   \item{p.value}{
-Numerical value to specify the threshold to use when constructing
-linkage groups. Defaults to \code{1e-06}. If a value greater than one
-is given this feature is turned off and it is assumed that all marker
-data inputted belong to the same linkage group (see Details).
+Numerical value to specify the threshold to use when clustering
+markers. Defaults to \code{1e-06}. If a value greater than one
+is given this feature is turned off inputted marker data are assumed to
+belong to the same linkage group (see Details).
 }
   \item{noMap.dist}{
 Numerical value to specify the smallest genetic distance a set of
@@ -96,7 +96,7 @@ to \code{"bc","dh","riself"} populations only. (see Details). Default is \code{F
 \item{return.imputed}{
 Logical value. If \code{TRUE} then the imputed marker probability matrix is
 returned for the linkage groups that are constructed (see
-Details). Default is \code{FALSE}. 
+Details). Default is \code{FALSE}.
 }
   \item{trace}{
 An automatic tracing facility. If \code{trace = FALSE} then
@@ -199,7 +199,7 @@ element consisting of marker probabilities of the A allele being
 present (i.e. P(A) = 1, P(B) = 0). Both elements contain a
 possibly reduced version of the marker set that includes all
 non-colocating markers as well as the first marker of any set of
-co-locating markers. 
+co-locating markers.
 }
 \value{The function returns a cross object with an identical class
   structure to the cross \code{object} inputted. The object is a list
@@ -210,9 +210,13 @@ co-locating markers.
   contain an \code{"imputed.geno"} element.
 }
 \references{
-Y. Wu, P. Bhat, T.J. Close, S. Lonardi, Efficient and Accurate
+Wu, Y., Bhat, P., Close, T.J, Lonardi, S. (2008) Efficient and Accurate
 Construction of Genetic Linkage Maps from Minimum Spanning Tree of a
-Graph Plos Genetics, Volume 4, Issue 10, 2008.
+Graph. Plos Genetics, \bold{4}, Issue 10.
+
+Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+Linkage Map Construction and Diagnosis. Journal of Statistical Software,
+\bold{79}(6), 1--29.
 }
 \author{
 Julian Taylor, Dave Butler, Timothy Close, Yonghui Wu, Stefano Lonardi

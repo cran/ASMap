@@ -98,6 +98,11 @@ function.
 }
 \value{A heat map is displayed on the current plotting device.
 }
+\references{
+Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+Linkage Map Construction and Diagnosis. Journal of Statistical Software,
+\bold{79}(6), 1--29.
+}
 \author{
 Julian Taylor
 }

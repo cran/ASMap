@@ -104,6 +104,11 @@ the marker/interval statistics are returned with an extra logical column called
 \code{"crit.val"} from testing markers for segregation distortion and
 intervals for weak linkage (see Details).
 }
+\references{
+Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+Linkage Map Construction and Diagnosis. Journal of Statistical Software,
+\bold{79}(6), 1--29.
+}
 \author{
 Julian Taylor
 }

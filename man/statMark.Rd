@@ -12,7 +12,7 @@ statMark(cross, chr, stat.type = c("marker","interval"), map.function = "kosambi
 \arguments{
   \item{cross}{
 An R/qtl \code{cross} object with class structure \code{"bc",
-  "dh","riself","bcsft"}. (see \code{?mstmap.cross} for more details.)     
+  "dh","riself","bcsft"}. (see \code{?mstmap.cross} for more details.)
 }
 \item{chr}{
 Character vector of linkage group names used for subsetting the
@@ -49,6 +49,11 @@ returned linkage map statistics on a single graphical display.
 \value{
 A list named by the \code{stat.type} used in the call. Each element is a
 data frame of statistics with columns named by the statistic.
+}
+\references{
+Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+Linkage Map Construction and Diagnosis. Journal of Statistical Software,
+\bold{79}(6), 1--29.
 }
 \author{
 Julian Taylor

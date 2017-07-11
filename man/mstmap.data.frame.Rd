@@ -40,11 +40,11 @@ constructing the map. Options are \code{"COUNT"} for minimising the sum of
 recombination events between markers and \code{"ML"} for maximising the
 likelihood objective function. Default is \code{"COUNT"}.
 }
-  \item{p.value}{
-Numerical value to specify the threshold to use when constructing
-linkage groups. Defaults to \code{1e-06}. If a value greater than one
-is given this feature is turned off and it is assumed that all marker
-data inputted belong to the same linkage group (see Details).
+\item{p.value}{
+Numerical value to specify the threshold to use when clustering
+markers. Defaults to \code{1e-06}. If a value greater than one
+is given this feature is turned off inputted marker data are assumed to
+belong to the same linkage group (see Details).
 }
   \item{noMap.dist}{
 Numerical value to specify the smallest genetic distance a set of
@@ -65,7 +65,7 @@ will not be included in the linkage map. Default is 1.
 \item{mvest.bc}{
 Logical value. If \code{TRUE} missing markers will be imputed
 before clustering the markers into linkage groups.  This is restricted
-to \code{"BC","DH","ARIL"} populations only (see Details).  
+to \code{"BC","DH","ARIL"} populations only (see Details).
 }
 \item{detectBadData}{
 Logical value. If \code{TRUE} possible genotyping errors are detected,
@@ -84,7 +84,7 @@ Default is \code{TRUE}.
 \item{return.imputed}{
 Logical value. If \code{TRUE} then the imputed marker probability matrix is
 returned for the linkage groups that are constructed (see
-Details). Default is \code{FALSE}. 
+Details). Default is \code{FALSE}.
 }
 \item{trace}{
 An automatic tracing facility. If \code{trace = FALSE} then
@@ -97,7 +97,7 @@ would be obtained from running the MSTmap executable from the command line.
 Currently ignored.
 }
 }
-\details{  
+\details{
 The data frame \code{object} must have an explicit format with markers
 in rows and genotypes in columns. The marker names are required to be in
 the \code{rownames} component and the genotype names are
@@ -182,18 +182,18 @@ with arguments \code{F.gen = n} and \code{BC.gen =
   0}. For \code{"ARIL"} populations the constructed object is given the
 class \code{"riself"}.
 
-If \code{return.imputed = TRUE} and \code{pop.type} is one of 
+If \code{return.imputed = TRUE} and \code{pop.type} is one of
 \code{"BC","DH","ARIL"}, then the marker probability matrix is
 returned for the linkage groups that have been constructed using the
 algorithm. Each linkage group is named identically to the linkage groups
 of the map and, if \code{as.cross = TRUE}, contains an ordered
-\code{"map"} element and a \code{"data"} 
+\code{"map"} element and a \code{"data"}
 element consisting of marker probabilities of the A allele being present
 (i.e. P(A) = 1, P(B) = 0). Both elements contain a
 possibly reduced version of the marker set that includes all
 non-colocating markers as well as the first marker of any set of
 co-locating markers. If \code{as.cross = FALSE} then an ordered data frame of matrix
-probabilities is returned. 
+probabilities is returned.
 }
 \value{
   If \code{as.cross = TRUE} the function returns an R/qtl cross object with the appropriate
@@ -208,9 +208,13 @@ probabilities is returned.
     TRUE} then the object will also contain an \code{"imputed.geno"} element.
 }
 \references{
-Y. Wu, P. Bhat, T.J. Close, S. Lonardi, Efficient and Accurate
+Wu, Y., Bhat, P., Close, T.J, Lonardi, S. (2008) Efficient and Accurate
 Construction of Genetic Linkage Maps from Minimum Spanning Tree of a
-Graph Plos Genetics, Volume 4, Issue 10, 2008.
+Graph. Plos Genetics, \bold{4}, Issue 10.
+
+Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+Linkage Map Construction and Diagnosis. Journal of Statistical Software,
+\bold{79}(6), 1--29.
 }
 \author{
 Julian Taylor, Dave Butler, Timothy Close, Yonghui Wu, Stefano Lonardi

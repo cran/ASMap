@@ -14,7 +14,7 @@ pullCross(object, chr, type = c("co.located","seg.distortion","missing"),
 \arguments{
   \item{object}{
 An R/qtl \code{cross} object with class structure \code{"bc",
-  "dh","riself","bcsft"}. (see \code{?mstmap.cross} for more details.)  
+  "dh","riself","bcsft"}. (see \code{?mstmap.cross} for more details.)
 }
 \item{chr}{
 A character vector of linkage group names with which to subset the linkage
@@ -52,7 +52,7 @@ Currently supported types are:
 reduce a linkage map to a unique set of markers for the purpose of
 efficient map construction. Co-located markers are pulled from the
 linkage map using the technology of \code{findDupMarkers} from the
-\pkg{qtl} package and places them aside 
+\pkg{qtl} package and places them aside
 in a separate list element called \code{"co.located"}. This element
 contains the removed marker data as well as a table
 that displays the connections between the co-located markers with
@@ -96,6 +96,11 @@ markers. See examples below for more detail.
 The cross object is returned with identical class structure as the
 inputted cross object and an additional elements corresponding to the
 marker types being pulled from the map.
+}
+\references{
+Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+Linkage Map Construction and Diagnosis. Journal of Statistical Software,
+\bold{79}(6), 1--29.
 }
 \author{
 Julian Taylor

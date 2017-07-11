@@ -26,6 +26,7 @@ pullCross,
 pushCross,
 subsetCross,
 pp.init,
+pValue,
 statGen,
 profileGen,
 statMark,
@@ -38,4 +39,4 @@ S3method(mstmap, cross)
 S3method(mstmap, data.frame)
 
 ##[Dynamic libraries]
-useDynLib("ASMap")
+useDynLib("ASMap", .registration=TRUE)

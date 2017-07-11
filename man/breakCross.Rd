@@ -42,6 +42,11 @@ The cross object is returned with identical class structure as the
 inputted cross object. The \code{"geno"} element will contain
 separate linkage groups for the user defined splits.
 }
+\references{
+Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+Linkage Map Construction and Diagnosis. Journal of Statistical Software,
+\bold{79}(6), 1--29.
+}
 \author{
 Julian Taylor
 }

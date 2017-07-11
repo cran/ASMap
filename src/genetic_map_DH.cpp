@@ -35,8 +35,8 @@ genetic_map::~genetic_map() {
 //////////////////////////////////////////////////////////////////////////////
 int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
 
-  SEXP names = getAttrib(data, R_NamesSymbol);
-  SEXP row_names = getAttrib(data, install("row.names"));
+  SEXP names = PROTECT(getAttrib(data, R_NamesSymbol));
+  SEXP row_names = PROTECT(getAttrib(data, install("row.names")));
   string tmp_str;
   extern int trace;
 
@@ -123,6 +123,7 @@ int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
 	Rf_error("unrecognzed marker at line  %d marker: %s   column %d\n",
 		ii+1,marker_name_ii.c_str(),jj + 1);
 	//assert(false); // crash the program on error
+  UNPROTECT(2);
 	return -1;
 	}
       }
@@ -151,6 +152,7 @@ int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
   number_of_loci = raw_mapping_data.size();
   if(trace)
     Rprintf("Found %d missing values\n",total_number_of_missing_obs);
+    UNPROTECT(2);
   return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

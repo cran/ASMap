@@ -551,20 +551,22 @@ quickEst <- function(object, chr, map.function = "kosambi", ...){
     nm <- nmar(object)
     for(i in chr){
         temp <- subset(object, chr = i)
-        est <- est.rf(temp)$rf
-        nc <- dim(est)[1]
-        er <- est[cbind(2:nc,1:(nc - 1))]
-        temp$geno[[i]]$map <- c(0,cumsum(imf(er)))
-        names(temp$geno[[i]]$map) <- dimnames(temp$geno[[i]]$data)[[2]]
-        tempa <- argmax.geno(temp, step = 0, map.function = map.function, ...)
-        tempa$geno[[i]]$data <- tempa$geno[[i]]$argmax
-        tempa$geno[[i]] <- tempa$geno[[i]][-3]
-        esta <- est.rf(tempa)$rf
-        era <- esta[cbind(2:nc,1:(nc - 1))]
-        if(class(object)[1] == "riself")
-            era <- (era/2)/(1 - era)
-        object$geno[[i]]$map <- c(0,cumsum(imf(era)))
-        names(object$geno[[i]]$map) <- dimnames(object$geno[[i]]$data)[[2]]
+        if(nmar(temp) != 1){
+            est <- est.rf(temp)$rf
+            nc <- dim(est)[1]
+            er <- est[cbind(2:nc,1:(nc - 1))]
+            temp$geno[[i]]$map <- c(0,cumsum(imf(er)))
+            names(temp$geno[[i]]$map) <- dimnames(temp$geno[[i]]$data)[[2]]
+            tempa <- argmax.geno(temp, step = 0, map.function = map.function, ...)
+            tempa$geno[[i]]$data <- tempa$geno[[i]]$argmax
+            tempa$geno[[i]] <- tempa$geno[[i]][-3]
+            esta <- est.rf(tempa)$rf
+            era <- esta[cbind(2:nc,1:(nc - 1))]
+            if(class(object)[1] == "riself")
+                era <- (era/2)/(1 - era)
+            object$geno[[i]]$map <- c(0,cumsum(imf(era)))
+            names(object$geno[[i]]$map) <- dimnames(object$geno[[i]]$data)[[2]]
+            }
     }
     object
 }
@@ -672,6 +674,7 @@ fixClones <- function(object, gc, id = "Genotype", consensus = TRUE){
             len <- apply(bm[wh,], 1, function(el) length(el[!is.na(el)]))
             kp <- gn[len == max(len)][1]
             gomit[[i]] <- gn[!(gn %in% kp)]
+            kp <- rownames(bm) %in% kp
         }
         rownames(bm)[kp] <- paste(gn, collapse = "_")
     }
@@ -868,6 +871,7 @@ pushCross <- function(object, type = c("co.located","seg.distortion","missing","
             object$geno[[i]]$map <- omap
         }
         object <- fixObject(object, type)
+        attr(object, "scheme") <- NULL
         return(object)
     }
     if(type %in% c("seg.distortion","missing")){
@@ -912,6 +916,7 @@ pushCross <- function(object, type = c("co.located","seg.distortion","missing","
         if(dim(object[[type]]$data)[2] == 0)
             object <- fixObject(object, type)
         object$geno <- c(object$geno, push.object$geno)
+
     }
     if(type %in% "unlinked"){
         if(is.null(unlinked.chr))
@@ -979,12 +984,19 @@ pushCross <- function(object, type = c("co.located","seg.distortion","missing","
 
 }
 
-combineMap <- function(..., id = "Genotype", keep.all = TRUE){
+combineMap <- function(..., id = "Genotype", keep.all = TRUE, merge.by = "genotype"){
     mapl <- list(...)
-    marku <- unlist(lapply(mapl, function(el) markernames(el)))
-    tm <- table(marku)
-    if(any(tm > 1))
-        stop("Non-unique markers between linkage maps.")
+    if(merge.by %in% "genotype"){
+        pkeep.all <- keep.all
+        marku <- unlist(lapply(mapl, function(el) markernames(el)))
+        if(any(table(marku) > 1))
+            stop("Non-unique markers between linkage maps.")
+    } else {
+        pkeep.all <- TRUE
+        genu <- unlist(lapply(mapl, function(el) as.character(el$pheno[[id]])))
+        if(any(table(genu) > 1))
+            stop("Non-unique genotypes between linkage maps.")
+    }
     if(length(unique(sapply(mapl, function(el) class(el)[1]))) > 1)
         stop("Classes of maps need to be identical.")
     scheme <- lapply(mapl, function(el) attr(el, "scheme"))
@@ -998,31 +1010,48 @@ combineMap <- function(..., id = "Genotype", keep.all = TRUE){
     mapl <- lapply(mapl, function(el){
         names(el$geno) <- gsub("x","X", names(el$geno))
         el})
-    maplb <- lapply(mapl, function(el){
+    maplb <- lapply(mapl, function(el, merge.by){
         mapb <- do.call("cbind", lapply(el$geno, function(x) x$data))
         mdist <- unlist(pull.map(el))
         chrs <- rep(names(el$geno), times = nmar(el))
         cl <- sapply(el$geno, function(el) class(el))
         dimnames(mapb)[[2]] <- paste(chrs, markernames(el), as.character(mdist), cl, sep = ";")
-        mapb <- as.data.frame(mapb)
-        mapb[[id]] <- as.character(el$pheno[[id]])
+        dimnames(mapb)[[1]] <- as.character(el$pheno[[id]])
+        if(merge.by %in% "marker"){
+            mapb <- as.data.frame(t(mapb))
+            mapb[[merge.by]] <- markernames(el)
+            mapb[["dims"]] <- dimnames(mapb)[[1]]
+        } else {
+            mapb <- as.data.frame(mapb)
+            mapb[[merge.by]] <- as.character(el$pheno[[id]])
+        }
         mapb
-    })
+    }, merge.by)
     phelb <- lapply(mapl, function(el) el$pheno)
     mapm <- maplb[[1]]
     phem <- phelb[[1]]
     for(i in 1:(length(maplb) - 1)) {
-        mapm <- merge(mapm, maplb[[i + 1]], by = id, all = keep.all)
-        phem <- merge(phem, phelb[[i + 1]], by = id, all = keep.all)
+        mapm <- merge(mapm, maplb[[i + 1]], by = merge.by, all = keep.all)
+        phem <- merge(phem, phelb[[i + 1]], by = id, all = pkeep.all)
     }
-    nams <- mapm[[id]]
+    if(length(wh <- grep("dims", names(mapm)))){
+        dnam <- apply(mapm[,wh], 1, function(el){
+            el <- el[!is.na(el)]
+            el[1] })
+        omit <- c(names(mapm)[wh], "marker")
+        mapm <- mapm[,!(names(mapm) %in% omit)]
+        rownames(mapm) <- dnam
+    } else {
+        rownames(mapm) <- mapm[["genotype"]]
+        mapm <- t(mapm[,!(names(mapm) %in% "genotype")])
+    }
+    nams <- dimnames(mapm)[[2]]
     mxo <- mixedorder(nams)
-    mapm <- mapm[mxo,]
-    phem <- phem[mixedorder(as.character(phem[[id]])),,drop = FALSE]
-    mapm <- mapm[,!(names(mapm) %in% id)]
-    spl.m <- strsplit(names(mapm), ";")
+    mapm <- mapm[,mxo]
+    phem <- phem[mxo,,drop=FALSE]
+    print(phem)
+    spl.m <- strsplit(rownames(mapm), ";")
     ch <- sapply(spl.m, "[", 1)
-    mapm <- t(mapm)
     mapf <- list()
     mapf$geno <- lapply(split.data.frame(mapm, ch), function(el, nams){
         temp <- list()
@@ -1044,92 +1073,6 @@ combineMap <- function(..., id = "Genotype", keep.all = TRUE){
     mapf
 }
 
-## combineMap <- function(..., id = "Genotype", keep.all = TRUE, merge.by = "genotype"){
-##     mapl <- list(...)
-##     if(merge.by %in% "genotype"){
-##         marku <- unlist(lapply(mapl, function(el) markernames(el)))
-##         if(any(table(marku) > 1))
-##             stop("Non-unique markers between linkage maps.")
-##     } else {
-##         genu <- unlist(lapply(mapl, function(el) as.character(el$pheno[[id]])))
-##         if(any(table(genu) > 1))
-##             stop("Non-unique genotypes between linkage maps.")
-##     }
-##     if(length(unique(sapply(mapl, function(el) class(el)[1]))) > 1)
-##         stop("Classes of maps need to be identical.")
-##     scheme <- lapply(mapl, function(el) attr(el, "scheme"))
-##     if(any(!sapply(scheme, is.null))){
-##         sc <- do.call("rbind", scheme)
-##         if((nrow(sc) != length(mapl)) | !all(duplicated(sc)[2:nrow(sc)]))
-##             stop("Mismatched cross schemes in linkage maps")
-##     }
-##     if(!all(sapply(mapl, function(el) id %in% names(el$pheno))))
-##         stop("Some linkage maps do not contain column\"", id, "\".")
-##     mapl <- lapply(mapl, function(el){
-##         names(el$geno) <- gsub("x","X", names(el$geno))
-##         el})
-##     maplb <- lapply(mapl, function(el, merge.by){
-##         mapb <- do.call("cbind", lapply(el$geno, function(x) x$data))
-##         mdist <- unlist(pull.map(el))
-##         chrs <- rep(names(el$geno), times = nmar(el))
-##         cl <- sapply(el$geno, function(el) class(el))
-##         dimnames(mapb)[[2]] <- paste(chrs, markernames(el), as.character(mdist), cl, sep = ";")
-##         dimnames(mapb)[[1]] <- as.character(el$pheno[[id]])
-##         if(merge.by %in% "marker"){
-##             mapb <- as.data.frame(t(mapb))
-##             mapb[[merge.by]] <- markernames(el)
-##             mapb[["dims"]] <- dimnames(mapb)[[1]]
-##         } else {
-##             mapb <- as.data.frame(mapb)
-##             mapb[[merge.by]] <- as.character(el$pheno[[id]])
-##         }
-##         mapb
-##     }, merge.by)
-##     phelb <- lapply(mapl, function(el) el$pheno)
-##     mapm <- maplb[[1]]
-##     phem <- phelb[[1]]
-##     for(i in 1:(length(maplb) - 1)) {
-##         mapm <- merge(mapm, maplb[[i + 1]], by = merge.by, all = keep.all)
-##         phem <- merge(phem, phelb[[i + 1]], by = id, all = keep.all)
-##     }
-##     if(length(wh <- grep("dims", names(mapm)))){
-##         dnam <- apply(mapm[,wh], 1, function(el){
-##             el <- el[!is.na(el)]
-##             el[1] })
-##         omit <- c(names(mapm)[wh], "marker")
-##         mapm <- mapm[,!(names(mapm) %in% omit)]
-##         rownames(mapm) <- dnam
-##     } else {
-##         rownames(mapm) <- mapm[["genotype"]]
-##         mapm <- t(mapm[,!(names(mapm) %in% "genotype")])
-##     }
-##     nams <- dimnames(mapm)[[2]]
-##     mxo <- mixedorder(nams)
-##     mapm <- mapm[,mxo]
-##     phem <- phem[mixedorder(phem[[id]]),,drop = FALSE]
-##     spl.m <- strsplit(rownames(mapm), ";")
-##     ch <- sapply(spl.m, "[", 1)
-##     mapf <- list()
-##     mapf$geno <- lapply(split.data.frame(mapm, ch), function(el, nams){
-##         temp <- list()
-##         spl.c <- strsplit(rownames(el), ";")
-##         if(nrow(el) == 1) print(as.matrix(t(el)))
-##         temp$data <- as.matrix(t(el))
-##         rownames(temp$data) <- nams
-##         temp$map <- as.numeric(sapply(spl.c, "[", 3))
-##         names(temp$map) <- dimnames(temp$data)[[2]] <- sapply(spl.c, "[", 2)
-##         mo <- order(temp$map)
-##         temp$map <- temp$map[mo]
-##         temp$data <- temp$data[,mo, drop = FALSE]
-##         class(temp) <- unique(sapply(spl.c, "[", 4))
-##         temp
-##     }, nams[mxo])
-##     class(mapf) <- class(mapl[[1]])
-##     attr(mapf, "scheme") <- scheme[[1]]
-##     mapf$pheno <- phem
-##     mapf$geno <- mapf$geno[mixedorder(names(mapf$geno))]
-##     mapf
-## }
 
 statMark <- function(cross, chr, stat.type = c("marker","interval"), map.function = "kosambi"){
     if (!any(class(cross) == "cross"))
@@ -1489,6 +1432,7 @@ alignCross <- function(object, chr, maps, ...){
         }
     }
     fdat <- do.call("rbind.data.frame", ldat)
+    if(dim(fdat)[1] == 0) stop("There are no matching markers between the inputted map and the reference maps.")
     rownames(fdat) <- NULL
     fdat$map.chr <- factor(fdat$map.chr, levels = names(object$geno))
     print(xyplot(map.dist ~ ref.dist | map.chr*map, groups = fdat$ref.chr, data = fdat,
@@ -1498,3 +1442,38 @@ alignCross <- function(object, chr, maps, ...){
                  panel.text(x, y, labels = labs[subscripts], ...), ...))
     invisible(fdat)
 }
+
+pValue <- function(dist = seq(25,40, by = 5), pop.size = 100:500, map.function = "kosambi", LOD = FALSE){
+    colour_hue <- function(n) {
+        hues = seq(15, 375, length = n + 1)
+        hcl(h = hues, l = 65, c = 100)[1:n]
+    }
+    if(max(dist) > 100)
+        stop("Genetic distance should not exceed 100cM.")
+    if(min(dist) < 0.001)
+        stop("Minimum genetic distance allowed is 0.001cM.")
+    mf <- switch(map.function, kosambi = mf.k, haldane = mf.h,
+                 morgan = mf.m, cf = mf.cf)
+    rf <- mf(dist)
+    val <- list()
+    for(i in 1:length(rf)){
+        rec <- rf[i]*pop.size
+        if(LOD){
+            val[[i]] <- (pop.size - rec)*log10(2*(1 - rf[i])) + rec*log10(2*rf[i])
+            ylab <- list("LOD score of linkage", cex = 1.5)
+        } else {
+            val[[i]] <- -log10(exp(-2*((pop.size/2 - rec)^2)/pop.size))
+            ylab <- list(expression(paste("-log10 ",epsilon, sep = "")), cex = 1.5)
+        }
+    }
+    dat <- cbind.data.frame(val = unlist(val))
+    dat$pop.size <- rep(pop.size, length(dist))
+    dat$dist <- rep(dist, each = length(pop.size))
+    cols <- colour_hue(length(dist))
+    labs <- paste(dist, " cM", sepm = "")
+    print(xyplot(val ~ pop.size, type = "l", data = dat, groups = dat$dist,
+                 lwd = 2, col = cols, xlab = "Number of genotypes in population", ylab = ylab,
+                 key = list(x = 0.05, y = 0.9, text = list(labs, cex = 2), lines = list(col = cols, lwd = 3))))
+}
+
+

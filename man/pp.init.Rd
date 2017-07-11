@@ -43,6 +43,11 @@ more details.
 \value{
 Return user defined parameter values for each of the parameters.
 }
+\references{
+Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+Linkage Map Construction and Diagnosis. Journal of Statistical Software,
+\bold{79}(6), 1--29.
+}
 \author{
 Julian Taylor
 }

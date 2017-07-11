@@ -14,7 +14,7 @@ profileGen(cross, chr, bychr = TRUE, stat.type = c("xo", "dxo", "miss"),
 \arguments{
   \item{cross}{
 An R/qtl \code{cross} object with class structure \code{"bc",
-  "dh","riself","bcsft"}. (see \code{?mstmap.cross} for more details.)     
+  "dh","riself","bcsft"}. (see \code{?mstmap.cross} for more details.)
 }
 \item{chr}{
 Character vector of linkage group names used for subsetting the
@@ -60,7 +60,12 @@ A lattice panel plot with panels described by the \code{stat.type} given
 in the call and genotype statistics are returned invisibly. If
 \code{xo.lambda} is not NULL then these statistics also include a
 logical vector named \code{"xo.lambda"} that is returned from testing
-the individuals for inflated recombination rates (see Details).  
+the individuals for inflated recombination rates (see Details).
+}
+\references{
+Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+Linkage Map Construction and Diagnosis. Journal of Statistical Software,
+\bold{79}(6), 1--29.
 }
 \author{
 Julian Taylor

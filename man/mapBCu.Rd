@@ -13,7 +13,12 @@
   \code{c("bc","cross")}. See \code{read.cross()} documentation for more
   details on the format of this object. This data set forms the basis of
   the worked example in Chapter 3 of the vignette (see vignette("ASMap")
-  for complete details
+  for complete details)
+}
+\references{
+Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+Linkage Map Construction and Diagnosis. Journal of Statistical Software,
+\bold{79}(6), 1--29.
 }
 \examples{
 

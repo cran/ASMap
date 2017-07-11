@@ -97,6 +97,11 @@ pushed into linkage groups of the established linkage map. If all
 markers of an element type are pushed back then the element type is
 removed from the object.
 }
+\references{
+Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+Linkage Map Construction and Diagnosis. Journal of Statistical Software,
+\bold{79}(6), 1--29.
+}
 \author{
 Julian Taylor
 }
