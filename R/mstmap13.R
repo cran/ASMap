@@ -1048,8 +1048,7 @@ combineMap <- function(..., id = "Genotype", keep.all = TRUE, merge.by = "genoty
     nams <- dimnames(mapm)[[2]]
     mxo <- mixedorder(nams)
     mapm <- mapm[,mxo]
-    phem <- phem[mxo,,drop=FALSE]
-    print(phem)
+    phem <- phem[mixedorder(as.character(phem[[id]])),,drop = FALSE]
     spl.m <- strsplit(rownames(mapm), ";")
     ch <- sapply(spl.m, "[", 1)
     mapf <- list()

@@ -3,7 +3,7 @@
 \section{Changes in version 1.0-0}{
 \subsection{README}{
   \itemize{
-    Version 1.0-x of the \pkg{ASMap} package celebrates the
+    \item Version 1.0-x of the \pkg{ASMap} package celebrates the
     Journal of Statistical Software publication, Taylor and Butler
     (2017). The paper succinctly summarizes the important contents of
     the package vignette and provides a useful quick reference for the

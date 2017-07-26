@@ -1,6 +1,6 @@
-d76abf811e87836ec243312177a0e334 *DESCRIPTION
+d6beba682eb514c05cd7e38fccbd6080 *DESCRIPTION
 ce7ab5fd14b99f3edf1d83d1b64a20a5 *NAMESPACE
-6a8c73b973d27dbd64f491f5314d8316 *R/mstmap13.R
+1c6d844e42bc9d057d1debed0bea1a41 *R/mstmap13.R
 3493bdade108bc998012652a44ef7f3f *build/vignette.rds
 17ffa7ec460bd87e4829a099e5d2e133 *data/mapBC.RData
 00adc3a855bfd6d59bff8551a25df1cb *data/mapBCu.RData
@@ -8,12 +8,12 @@ e41448667946c60873941e59a0501654 *data/mapDH.RData
 945add16e921bff31f24a8f77b7bf9da *data/mapDHf.RData
 d4d9aa0a173827cc0d9960ccf67f3318 *data/mapF2.RData
 212cf3cc4dab3d172a7ace3ba3ec7a33 *inst/CITATION
-c818a9abc7508c47314539ee0932e8af *inst/NEWS.Rd
+423e0f130d29402535c35de392bf176b *inst/NEWS.Rd
 3e7d7e09d20116ba3d0aed3a70b5d5db *inst/doc/asmapvignette.R
 d9d49613f4a5f27ef2f969241833013d *inst/doc/asmapvignette.Rnw
 75fe0e194ee8606c439fa600d854e6ad *inst/doc/asmapvignette.pdf
 eca0f5e4c34638820bdacceaeaa3ab6e *man/ASMap-internal.Rd
-337780239c46473f54f80690a3201f31 *man/ASMap-package.Rd
+a8b6d6dc4bbf8b70f30e514415e8f6ab *man/ASMap-package.Rd
 aba9600dc5fff8348d27837be11d3b90 *man/alignCross.Rd
 31bf5e13dcbd914c959cd3c6fe5a4e54 *man/breakCross.Rd
 74916d55ed7cef248bf577fc508722ac *man/combineMap.Rd
