@@ -7,7 +7,7 @@ linkage between markers.
 \description{
 Heat map of the estimated pairwise recombination fractions and LOD
 linkage between markers that provides extended functionality of Bromans
-R/qtl \code{plot.rf} function.
+R/qtl \code{plotRF} function.
 }
 \usage{
 heatMap(x, chr, mark, what = c("both", "lod", "rf"), lmax = 12,
@@ -59,7 +59,7 @@ can be used to customize the heatmap (see Details).
 }
 \details{
 This function is a rewrite of Bromans \pkg{qtl} package function
-\code{plot.rf} that provides extended functionality. When \code{what =
+\code{plotRF} that provides extended functionality. When \code{what =
   "lod"} is chosen the pairwise LOD linkage
 between markers is displayed on the heat map with
 a legend on the right hand side spanning zero to \code{lmax} across the
@@ -107,7 +107,7 @@ Linkage Map Construction and Diagnosis. Journal of Statistical Software,
 Julian Taylor
 }
 \seealso{
-\code{\link{plot.rf}}
+\code{\link[qtl]{plotRF}}
 }
 \examples{
 
