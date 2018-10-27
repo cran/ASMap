@@ -8,13 +8,13 @@ Profile individual genotype statistics for the current linkage map
 order of and R/qtl cross object
 }
 \usage{
-profileGen(cross, chr, bychr = TRUE, stat.type = c("xo", "dxo", "miss"),
-           id = "Genotype", xo.lambda = NULL, ...)
+profileGen(cross, chr, bychr = TRUE, stat.type = c("xo", "dxo",
+           "miss"), id = "Genotype", xo.lambda = NULL, ...)
 }
 \arguments{
   \item{cross}{
-An R/qtl \code{cross} object with class structure \code{"bc",
-  "dh","riself","bcsft"}. (see \code{?mstmap.cross} for more details.)
+An \pkg{qtl} \code{cross} object with class structure \code{"bc",
+  "dh", "riself", "bcsft"}. (see \code{?mstmap.cross} for more details.)
 }
 \item{chr}{
 Character vector of linkage group names used for subsetting the

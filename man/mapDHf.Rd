@@ -3,7 +3,7 @@
 \docType{data}
 \title{An unconstructed marker set for a doubled haploid wheat population}
 \description{An unconstructed marker set for a doubled
-  haploid wheat population in the form of a constructed R/qtl object.
+  haploid wheat population in the form of a constructed \pkg{qtl} object.
 }
 \usage{data(mapDHf)}
 \format{This data is the unconstructed version of \code{\link{mapDH}}
@@ -12,7 +12,7 @@
   3 slightly distorted markers. The data is in a \code{data.frame} format
   with genotypes in columns and randomly assorted markers in rows. See
   \code{\link{mstmap.data.frame}} documentation for more details on the format
-  of this object.    
+  of this object.
 }
 \examples{
 

@@ -2,10 +2,10 @@
 \alias{mstmap.cross}
 \alias{mstmap}
 \title{
-Extremely fast linkage map construction for R/qtl objects using MSTmap.
+Extremely fast linkage map construction for \pkg{qtl} objects using MSTmap.
 }
 \description{
-Extremely fast linkage map construction for R/qtl objects utilizing the
+Extremely fast linkage map construction for \pkg{qtl} objects using the
 source code for MSTmap (see Wu et al., 2008). The construction includes
 linkage group clustering, marker ordering and genetic distance calculations.
 }
@@ -13,14 +13,15 @@ linkage group clustering, marker ordering and genetic distance calculations.
 \method{mstmap}{cross}(object, chr, id = "Genotype", bychr = TRUE,
        suffix = "numeric", anchor = FALSE, dist.fun = "kosambi",
        objective.fun = "COUNT", p.value = 1e-06, noMap.dist = 15,
-       noMap.size = 0, miss.thresh = 1, mvest.bc = FALSE, detectBadData =
-       FALSE, return.imputed = FALSE, trace = FALSE, \ldots)
+       noMap.size = 0, miss.thresh = 1, mvest.bc = FALSE,
+       detectBadData = FALSE, return.imputed = FALSE,
+       trace = FALSE, \ldots)
 }
 \arguments{
   \item{object}{
-A \code{"cross"} object generated from the R/qtl package. Specifically
+A \code{"cross"} object generated from the \pkg{qtl} package. Specifically
 the object needs to inherit from one of the following classes
-\code{"bc", "dh","riself","bcsft"} (see Details).
+\code{"bc"}, \code{"dh"}, \code{"riself"}, \code{"bcsft"} (see Details).
 }
   \item{chr}{
 A character string of linkage group names that require re-construction
@@ -111,7 +112,7 @@ Currently ignored.
 }
 \details{
 The \pkg{qtl} cross object needs to inherit one of the allowable classes
-\code{"bc","dh","riself","bcsft"}. This provides a safeguard against
+\code{"bc","dh","riself", "bcsft"}. This provides a safeguard against
 attempts to construct a map for more complex populations that can
 exist in \pkg{qtl}. Users should be aware when doubled haploid
 populations are read in using \code{read.cross()} from the \pkg{qtl}
@@ -230,7 +231,8 @@ data(mapDH, package = "ASMap")
 
 ## bulking linkage groups and reconstructing entire linkage map
 
-test1 <- mstmap(mapDH, bychr = FALSE, dist.fun = "kosambi", trace = FALSE)
+test1 <- mstmap(mapDH, bychr = FALSE, dist.fun = "kosambi",
+                trace = FALSE)
 pull.map(test1)
 
 ## one linkage group at a time (possibly break established linkage
@@ -241,13 +243,15 @@ pull.map(test2)
 
 ## one linkage group at a time (do not break established linkage groups)
 
-test3 <- mstmap(mapDH, bychr = TRUE, dist.fun = "kosambi", p.value = 2, trace = FALSE)
+test3 <- mstmap(mapDH, bychr = TRUE, dist.fun = "kosambi", p.value = 2,
+                trace = FALSE)
 pull.map(test3)
 
-## impute before clustering and detect genotyping errors, pipe output to file
+## impute before clustering and detect genotyping errors, pipe output to
+## file
 
-test4 <- mstmap(mapDH, bychr = FALSE, dist.fun = "kosambi", trace = TRUE,
-         mvest.bc = TRUE, detectBadData = TRUE)
+test4 <- mstmap(mapDH, bychr = FALSE, dist.fun = "kosambi",
+                trace = TRUE, mvest.bc = TRUE, detectBadData = TRUE)
 pull.map(test4)
 
 }

@@ -7,12 +7,13 @@ Individual marker and interval statistics for an R/qtl cross object
 Individual marker and interval statistics for an R/qtl cross object
 }
 \usage{
-statMark(cross, chr, stat.type = c("marker","interval"), map.function = "kosambi")
+statMark(cross, chr, stat.type = c("marker","interval"),
+         map.function = "kosambi")
 }
 \arguments{
   \item{cross}{
-An R/qtl \code{cross} object with class structure \code{"bc",
-  "dh","riself","bcsft"}. (see \code{?mstmap.cross} for more details.)
+An \pkg{qtl} \code{cross} object with class structure \code{"bc"},
+  \code{"dh"}, \code{"riself"}, \code{"bcsft"}. (see \code{?mstmap.cross} for more details.)
 }
 \item{chr}{
 Character vector of linkage group names used for subsetting the

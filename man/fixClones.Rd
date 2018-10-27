@@ -11,7 +11,7 @@ fixClones(object, gc, id = "Genotype", consensus = TRUE)
 }
 \arguments{
   \item{object}{
-An R/qtl \code{object} object with any class structure.
+An \pkg{qtl} \code{object} object with any class structure.
 }
 \item{gc}{
 A data frame of genotype clone infomation usually from a call to

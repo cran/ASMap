@@ -1,10 +1,10 @@
 \name{breakCross}
 \alias{breakCross}
 \title{
-Break linkage groups of an R/qtl cross object
+Break linkage groups of an \pkg{qtl} cross object
 }
 \description{
-Breaks linkage groups of an R/qtl cross object from a user specified
+Breaks linkage groups of an \pkg{qtl} cross object from a user specified
 list.
 }
 \usage{
@@ -12,7 +12,7 @@ breakCross(cross, split = NULL, suffix = "numeric", sep = ".")
 }
 \arguments{
   \item{cross}{
-An R/qtl \code{cross} object with any class structure.
+An \pkg{qtl} \code{cross} object with any class structure.
 }
 \item{split}{
 A list named by the linkage groups required for splitting and containing
@@ -63,7 +63,8 @@ pull.map(mapDH1)[["4A.2"]]
 
 ## manually choose suffix
 
-mapDH1 <- breakCross(mapDH, split = list("4A" = "4A.m.8"), suffix = list("4A" = c("4AA","4AB")))
+mapDH1 <- breakCross(mapDH, split = list("4A" = "4A.m.8"),
+                     suffix = list("4A" = c("4AA","4AB")))
 
 }
 \keyword{misc}

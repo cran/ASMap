@@ -1,17 +1,17 @@
 \name{mergeCross}
 \alias{mergeCross}
 \title{
-Merge linkage groups of an R/qtl cross object
+Merge linkage groups of an \pkg{qtl} cross object
 }
 \description{
-Merges linkage groups of an R/qtl cross object from a user specified list.
+Merges linkage groups of an \pkg{qtl} cross object from a user specified list.
 }
 \usage{
 mergeCross(cross, merge = NULL, gap = 5)
 }
 \arguments{
   \item{cross}{
-An R/qtl \code{cross} object with any class structure.
+An \pkg{qtl} \code{cross} object with any class structure.
 }
 \item{merge}{
   A list with elements containing the linkage groups to be merged with

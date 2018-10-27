@@ -4,14 +4,14 @@
 Find and report genotype clones
 }
 \description{
-Find and report genotype clones for R/qtl objects.
+Find and report genotype clones for \pkg{qtl} objects.
 }
 \usage{
 genClones(object, chr, tol = 0.9, id = "Genotype")
 }
 \arguments{
   \item{object}{
-An R/qtl \code{object} object with any class structure.
+An \pkg{qtl} \code{object} object with any class structure.
 }
 \item{chr}{
 A character string of linkage group names.

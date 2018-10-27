@@ -7,7 +7,7 @@ linkage between markers.
 \description{
 Heat map of the estimated pairwise recombination fractions and LOD
 linkage between markers that provides extended functionality of Bromans
-R/qtl \code{plotRF} function.
+\pkg{qtl} package \code{plotRF} function.
 }
 \usage{
 heatMap(x, chr, mark, what = c("both", "lod", "rf"), lmax = 12,
@@ -16,7 +16,7 @@ rev(colorRampPalette(brewer.pal(11,"Spectral"))(256)),  \ldots)
 }
 \arguments{
 \item{x}{
-A \code{"cross"} object generated from the R/qtl package.
+A \code{"cross"} object generated from the \pkg{qtl} package.
 }
 \item{chr}{
 A character string of linkage group names to subset the cross object.
@@ -49,7 +49,7 @@ Logical value. If \code{TRUE} then borders are added around the diagonal
 elements of the heat map.
 }
 \item{color}{
-The colour spectrum used to display the heat map. The default is the
+The colour spectrum used to display the heat map. The default is a
 \code{"Spectral"} diverging palette from the \pkg{RColorBrewer} package (see Details).
 }
 \item{\ldots}{
@@ -59,7 +59,7 @@ can be used to customize the heatmap (see Details).
 }
 \details{
 This function is a rewrite of Bromans \pkg{qtl} package function
-\code{plotRF} that provides extended functionality. When \code{what =
+\code{plot.rf} that provides extended functionality. When \code{what =
   "lod"} is chosen the pairwise LOD linkage
 between markers is displayed on the heat map with
 a legend on the right hand side spanning zero to \code{lmax} across the
@@ -107,7 +107,7 @@ Linkage Map Construction and Diagnosis. Journal of Statistical Software,
 Julian Taylor
 }
 \seealso{
-\code{\link[qtl]{plotRF}}
+\code{\link{plotRF}}
 }
 \examples{
 
@@ -115,7 +115,8 @@ data(mapDH, package = "ASMap")
 
 ## bulking linkage groups and reconstructing entire linkage map
 
-test1 <- mstmap(mapDH, bychr = FALSE, dist.fun = "kosambi", trace = FALSE)
+test1 <- mstmap(mapDH, bychr = FALSE, dist.fun = "kosambi",
+                trace = FALSE)
 
 ## plot heat map of result
 

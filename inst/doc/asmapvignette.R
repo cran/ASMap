@@ -1,5 +1,6 @@
 ## ----setup, include=FALSE, cache=FALSE-----------------------------------
 library(knitr)
+library(formatR)
 # set global chunk options
 options(formatR.arrow=FALSE)
 opts_chunk$set(fig.path='figure/Rplots-',fig.align='center',fig.show='hold',comment=NA,background='white',highlight=FALSE,tidy=TRUE,size="small",continue=" ")

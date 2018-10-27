@@ -7,8 +7,8 @@ Parameter initialization function
 Parameter initialization function for \code{pushCross} and \code{pullCross}
 }
 \usage{
-pp.init(seg.thresh = 0.05, seg.ratio = NULL, miss.thresh = 0.1, max.rf =
-        0.25, min.lod = 3)
+pp.init(seg.thresh = 0.05, seg.ratio = NULL, miss.thresh = 0.1,
+        max.rf = 0.25, min.lod = 3)
 }
 \arguments{
  \item{seg.thresh}{

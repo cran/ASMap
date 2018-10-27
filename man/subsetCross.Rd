@@ -14,7 +14,7 @@ subsetCross(cross, chr, ind, ...)
  \item{cross}{
 A \code{"cross"} object generated from the R/qtl package. Specifically
 the object needs to inherit from one of the following classes
-\code{"bc", "dh","riself","bcsft"} (see Details).
+\code{"bc"}, \code{"dh"}, \code{"riself"}, \code{"bcsft"} (see Details).
 }
 \item{chr}{
 Optional vector specifying which chromosomes to keep or

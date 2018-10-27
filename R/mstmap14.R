@@ -690,7 +690,7 @@ fixClones <- function(object, gc, id = "Genotype", consensus = TRUE){
         temp
     })
     object <- subset(object, ind = !(object$pheno[[id]] %in% gomit))
-    names(object$geno) <- names(nm)
+    object$geno <- object$geno[mixedorder(names(object$geno))]
     object
 }
 
@@ -871,7 +871,7 @@ pushCross <- function(object, type = c("co.located","seg.distortion","missing","
             object$geno[[i]]$map <- omap
         }
         object <- fixObject(object, type)
-        attr(object, "scheme") <- NULL
+        attr(object, "scheme") <- cs
         return(object)
     }
     if(type %in% c("seg.distortion","missing")){
@@ -1431,7 +1431,8 @@ alignCross <- function(object, chr, maps, ...){
         }
     }
     fdat <- do.call("rbind.data.frame", ldat)
-    if(dim(fdat)[1] == 0) stop("There are no matching markers between the inputted map and the reference maps.")
+    if(dim(fdat)[1] == 0) 
+       stop("There are no matching markers between the inputted map and the reference maps.")
     rownames(fdat) <- NULL
     fdat$map.chr <- factor(fdat$map.chr, levels = names(object$geno))
     print(xyplot(map.dist ~ ref.dist | map.chr*map, groups = fdat$ref.chr, data = fdat,
@@ -1474,5 +1475,3 @@ pValue <- function(dist = seq(25,40, by = 5), pop.size = 100:500, map.function =
                  lwd = 2, col = cols, xlab = "Number of genotypes in population", ylab = ylab,
                  key = list(x = 0.05, y = 0.9, text = list(labs, cex = 2), lines = list(col = cols, lwd = 3))))
 }
-
-

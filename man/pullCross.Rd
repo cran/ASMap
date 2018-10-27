@@ -8,13 +8,13 @@ Pull markers of a certain type from a linkage map and place them aside in the
 R/qtl object and, if appropriate, keeping their connections with the reduced linkage map.
 }
 \usage{
-pullCross(object, chr, type = c("co.located","seg.distortion","missing"),
-          pars = NULL, replace = FALSE, ...)
+pullCross(object, chr, type = c("co.located","seg.distortion",
+          "missing"), pars = NULL, replace = FALSE, ...)
 }
 \arguments{
   \item{object}{
-An R/qtl \code{cross} object with class structure \code{"bc",
-  "dh","riself","bcsft"}. (see \code{?mstmap.cross} for more details.)
+An \pkg{qtl} \code{cross} object with class structure \code{"bc"}
+  \code{"dh"}, \code{"riself"}, \code{"bcsft"}. (see \code{?mstmap.cross} for more details.)
 }
 \item{chr}{
 A character vector of linkage group names with which to subset the linkage

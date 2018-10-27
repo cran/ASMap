@@ -32,7 +32,7 @@ If any list elements of \code{map} are \pkg{qtl} \code{"cross"} objects
 then marker names, linkage group identity and genetic distance
 information are extracted. List elements of \code{map} that are \code{data.frame}
 objects must explicitly contain named columns
-\code{"marker","ref.chr","ref.dist"} otherwise an error will be produced.
+\code{"marker"}, \code{"ref.chr"}, \code{"ref.dist"} otherwise an error will be produced.
 
 For each linkage group determined by \code{chr}, the contents of the
 listed \code{maps} are checked for matching markers in

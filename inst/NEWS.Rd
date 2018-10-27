@@ -1,6 +1,6 @@
 \name{news}
 \title{Release information for ASMap}
-\section{Changes in version 1.0-0}{
+\section{Changes in version 1.0-x}{
 \subsection{README}{
   \itemize{
     \item Version 1.0-x of the \pkg{ASMap} package celebrates the
@@ -10,12 +10,11 @@
     functionality of the package. If you use \pkg{ASMap} in your
     publication please reference it using the bibliographic reference obtainable using
     \code{citation("ASMap")} and given below.
-
-    Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
+    \item Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic
     Linkage Map Construction and Diagnosis. Journal of Statistical Software,
     \bold{79}(6), 1--29.
   }
- }
+}
 \subsection{NEW FEATURES}{
     \itemize{
       \item There is now a p-value function to emulate Figure 1.1 in
@@ -33,6 +32,8 @@
   }
 \subsection{BUG FIXES}{
   \itemize{
+    \item \code{fixClones} muddled linkage groups when an inputted map
+    had more than one linkage group. This has now been amended.
     \item The \code{fixClones} function crashed when \code{consensus =
       FALSE} was set. This has now been amended.
     \item The \code{cross.scheme} of the object was lost when pushing
@@ -46,14 +47,14 @@
  }
  }
 \section{Changes in version 0.4-x}{
-\subsection{README}{
+  \subsection{README}{
   \itemize{
-  This is the first documented NEWS release of ASMap. For this
+  \item This is the first documented NEWS release of ASMap. For this
   reason it contains information about features of the package as well
   as recent bug fixes.
+ }
 }
-}
- \subsection{NEW FEATURES}{
+\subsection{NEW FEATURES}{
     \itemize{
       \item The package now contains a function to assist in identifying
       and orienting linkage groups (see \code{?alignCross}).

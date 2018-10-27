@@ -11,8 +11,9 @@ linkage group clustering, marker ordering and genetic distance calculations.
 \usage{
 \method{mstmap}{data.frame}(object, pop.type = "DH", dist.fun = "kosambi",
       objective.fun = "COUNT", p.value = 1e-06, noMap.dist = 15,
-      noMap.size = 0, miss.thresh = 1, mvest.bc = FALSE, detectBadData = FALSE,
-      as.cross = TRUE, return.imputed = FALSE, trace = FALSE, \ldots)
+      noMap.size = 0, miss.thresh = 1, mvest.bc = FALSE,
+      detectBadData = FALSE, as.cross = TRUE, return.imputed = FALSE,
+      trace = FALSE, \ldots)
 }
 \arguments{
   \item{object}{
@@ -76,7 +77,7 @@ to \code{"BC","DH","ARIL"} populations only. (see Details). Default is \code{FAL
 }
 \item{as.cross}{
 Logical value. If \code{TRUE} the constructed linkage map is returned as
-a R/qtl cross object (see Details). If \code{FALSE} then the constructed
+a \pkg{qtl} cross object (see Details). If \code{FALSE} then the constructed
 linkage map is returned as a \code{data.frame} with extra columns
 indicating the linkage group, marker name/position and genetic distance.
 Default is \code{TRUE}.
@@ -175,7 +176,7 @@ amendment is returned in the imputed probability matrix if
 \code{return.imputed = TRUE}
 
 If \code{as.cross = TRUE} then the constructed object is returned as a
-R/qtl cross object with the appropriate class structure. For \code{"RILn"}
+\pkg{qtl} cross object with the appropriate class structure. For \code{"RILn"}
 populations the constructed object is given the class \code{"bcsft"} by
 using the \pkg{qtl} package conversion function \code{convert2bcsft}
 with arguments \code{F.gen = n} and \code{BC.gen =

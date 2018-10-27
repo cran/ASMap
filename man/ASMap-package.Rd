@@ -14,8 +14,8 @@ ordering using MSTmap (see Wu et al., 2008).
 \tabular{ll}{
 Package: \tab ASMap\cr
 Type: \tab Package\cr
-Version: \tab 1.0-1\cr
-Date: \tab 2017-07-26\cr
+Version: \tab 1.0-4\cr
+Date: \tab 2018-10-24\cr
 License: \tab GPL 2\cr
 }
 Welcome to the ASMap package!
@@ -52,9 +52,9 @@ each. \code{profileGen} can be used to simultaneously profile multiple
 statistics such as recombination counts and double recombination
 counts for individual lines across the constructed linkage
 map. \code{profileMark} allows simultaneous graphical visualization of
-marker or interval statistics profiles across the genome or subsetted for a predefined
-set of linkage groups. Graphical identification and orientation of linkage groups
-using reference linkage maps can be conducted using
+marker or interval statistics profiles across the genome or subsetted
+for a predefined set of linkage groups. Graphical identification and
+orientation of linkage groups using reference linkage maps can be conducted using
 \code{alignCross}. All of these graphical functions utilize the power of
 the advanced graphics package \pkg{lattice} to provide seamless multiple
 displays.

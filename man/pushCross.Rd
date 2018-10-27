@@ -8,13 +8,14 @@ Push unlinked markers or markers that were originally placed aside by
 \code{pullCross} back into linkage groups of an established R/qtl linkage map.
 }
 \usage{
-pushCross(object, type = c("co.located","seg.distortion","missing","unlinked"),
-       unlinked.chr = NULL, pars = NULL, ...)
+pushCross(object, type = c("co.located","seg.distortion",
+          "missing","unlinked"), unlinked.chr = NULL,
+          pars = NULL, ...)
 }
 \arguments{
 \item{object}{
-An R/qtl \code{cross} object with class structure \code{"bc",
-  "dh","riself","bcsft"}. (see \code{?mstmap.cross} for more details.)
+An R/qtl \code{cross} object with class structure \code{"bc"},
+  \code{"dh"}, \code{"riself"}, \code{"bcsft"}. (see \code{?mstmap.cross} for more details.)
 }
 \item{type}{
 A character string determining the type of markers to be pushed into
@@ -51,7 +52,7 @@ current positions of the markers in the reduced linkage map to determine
 where to push the co-located markers back to.
 
 \item \code{type = "seg.distortion"}. Users can push markers from the
-object element \code{"seg.distortion"} back into a linkage map using the thresholding
+\code{"seg.distortion"} element of the object back into a linkage map using the thresholding
 mechanisms \code{seg.thresh} and \code{seg.ratio} called using
 \code{pars}. If \code{seg.thresh} is given then the markers are pushed
 back that have p-values that are GREATER than \code{seg.thresh}. If

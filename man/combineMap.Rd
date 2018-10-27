@@ -4,15 +4,16 @@
 Combine linkage maps from multiple \pkg{qtl} cross objects
 }
 \description{
-Combine map information, marker data and phenotype data from multiple R/qtl cross objects
+Combine map information, marker data and phenotype data from multiple \pkg{qtl} cross objects
 }
 \usage{
-combineMap(..., id = "Genotype", keep.all = TRUE, merge.by = "genotype")
+combineMap(..., id = "Genotype", keep.all = TRUE,
+           merge.by = "genotype")
 }
 \arguments{
   \item{\ldots}{
 An unlimited set of arguments with each argument defining an \pkg{qtl} cross
-object. All R/qtl objects can have any class structure but it must be
+object. All \pkg{qtl} objects can have any class structure but it must be
 identical across objects. (see Details for more information.)
 }
 \item{id}{
@@ -102,7 +103,8 @@ data(mapDH, package = "ASMap")
 mapDH1 <- mapDH
 names(mapDH1$geno)[5:14] <- paste("L",1:10, sep = "")
 mapDH1$geno <- lapply(mapDH1$geno, function(el){
-    names(el$map) <- dimnames(el$data)[[2]] <- paste(names(el$map), "A", sep = "")
+    nam <- paste(names(el$map), "A", sep = "")
+    names(el$map) <- dimnames(el$data)[[2]] <- nam
     el})
 
 mapDHc <- combineMap(mapDH, mapDH1)

@@ -7,8 +7,8 @@ P-value graph
 P-value graph to determine threshold for marker clustering
 }
 \usage{
-pValue(dist = seq(25,40, by = 5), pop.size = 100:500, map.function =
-       "kosambi", LOD = FALSE)
+pValue(dist = seq(25,40, by = 5), pop.size = 100:500,
+       map.function = "kosambi", LOD = FALSE)
 }
 \arguments{
 \item{dist}{

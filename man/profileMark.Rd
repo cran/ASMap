@@ -8,13 +8,13 @@ Graphically profile individual marker and interval statistics for an R/qtl cross
 }
 \usage{
 profileMark(cross, chr, stat.type = "marker", use.dist = TRUE,
-          map.function = "kosambi", crit.val = NULL, display.markers = FALSE,
-          mark.line = FALSE, ...)
+          map.function = "kosambi", crit.val = NULL,
+          display.markers = FALSE, mark.line = FALSE, ...)
 }
 \arguments{
   \item{cross}{
-An R/qtl \code{cross} object with class structure \code{"bc",
-  "dh","riself","bcsft"}. (see \code{?mstmap.cross} for more details.)
+An R/qtl \code{cross} object with class structure \code{"bc"},
+  \code{"dh"}, \code{"riself"}, \code{"bcsft"}. (see \code{?mstmap.cross} for more details.)
 }
 \item{chr}{
 Character vector of linkage group names used for subsetting the
