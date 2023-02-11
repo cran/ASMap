@@ -123,7 +123,7 @@ void linkage_group::dump_distance_matrix() {
   Rprintf("matrix dimension: %d\n", pair_wise_distances.size());
   for (unsigned int ii = 0; ii < pair_wise_distances.size(); ii++) {
     for (unsigned int jj = 0; jj < pair_wise_distances[ii].size(); jj++) {
-      sprintf(buffer, "%.2f ", pair_wise_distances[ii][jj]);
+      snprintf(buffer, 10, "%.2f ", pair_wise_distances[ii][jj]);
       Rprintf("%s",buffer);
     }
     Rprintf("\n");
@@ -317,11 +317,11 @@ void linkage_group_DH::revert_suspicious_data(){
   if(suspicious_data.size() != suspicious_data_backup.size())
     Rf_error("suspicious_data.size() != suspicious_data_backup.size()\n");
   //assert(suspicious_data.size() == suspicious_data_backup.size());
-    for (unsigned int ii = 0; ii < suspicious_data.size(); ii++){
-        int marker_id = suspicious_data[ii].first;
-        int indi_id = suspicious_data[ii].second;
-        raw_data[marker_id][indi_id] = suspicious_data_backup[ii];
-    }
+      for (unsigned int ii = 0; ii < suspicious_data.size(); ii++){
+          int marker_id = suspicious_data[ii].first;
+          int indi_id = suspicious_data[ii].second;
+          raw_data[marker_id][indi_id] = suspicious_data_backup[ii];
+      }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////

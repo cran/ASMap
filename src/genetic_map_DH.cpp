@@ -9,6 +9,7 @@
 #include <string>
 #include <sstream>
 #include <Rdefines.h>
+#include <Rinternals.h>
 #include "genetic_map_DH.h"
 
 SEXP ielem(SEXP list, int i);
@@ -123,7 +124,7 @@ int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
 	Rf_error("unrecognzed marker at line  %d marker: %s   column %d\n",
 		ii+1,marker_name_ii.c_str(),jj + 1);
 	//assert(false); // crash the program on error
-  UNPROTECT(2);
+	UNPROTECT(2);
 	return -1;
 	}
       }
@@ -150,9 +151,8 @@ int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
   //assert(number_of_loci == raw_mapping_data.size() + killed_markers);
   //assert(raw_mapping_data.size() == marker_names.size());
   number_of_loci = raw_mapping_data.size();
-  if(trace)
-    Rprintf("Found %d missing values\n",total_number_of_missing_obs);
-    UNPROTECT(2);
+  if(trace) Rprintf("Found %d missing values\n",total_number_of_missing_obs);
+  UNPROTECT(2);
   return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -191,7 +191,7 @@ void genetic_map::dump_distance_matrix() {
   Rprintf("matrix dimension: %d\n", pair_wise_distances.size());
   for (unsigned int ii = 0; ii < pair_wise_distances.size(); ii++) {
     for (unsigned int jj = 0; jj < pair_wise_distances[ii].size(); jj++) {
-      sprintf(buffer, "%.2f ", pair_wise_distances[ii][jj]);
+      snprintf(buffer, 10, "%.2f ", pair_wise_distances[ii][jj]);
       Rprintf("%s", buffer);
     }
     Rprintf("\n");
@@ -491,9 +491,9 @@ void genetic_map::write_output(SEXP &map)
 	char buffer1[100];
 	char buffer2[100];
 	char buffer3[100];
-	sprintf(buffer1,"%.3f",lowerbounds[ii]);
-	sprintf(buffer2,"%.3f",upperbounds[ii]);
-	sprintf(buffer3,"%.3f",approx_bounds[ii]);
+	snprintf(buffer1, 100, "%.3f",lowerbounds[ii]);
+	snprintf(buffer2, 100, "%.3f",upperbounds[ii]);
+	snprintf(buffer3, 100, "%.3f",approx_bounds[ii]);
 	Rprintf(";lowerbound: %s upperbound: %s", buffer1, buffer2);
 	Rprintf(" cost after initialization: %s\n", buffer3);
 	Rprintf("group lg %d\n", ii);
@@ -521,7 +521,7 @@ void genetic_map::write_output(SEXP &map)
 	     iter2++) {
 	  if(trace) {
 	    char buffer[100];
-	    sprintf(buffer, "%.3f", cum_dist);
+	    snprintf(buffer, 100, "%.3f", cum_dist);
 	    Rprintf("%s\t%s\n",marker_names[*iter2].c_str(),buffer);
 	  }
 	  P_dist[kount]=cum_dist;
