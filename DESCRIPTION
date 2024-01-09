@@ -1,7 +1,7 @@
 Package: ASMap
 Type: Package
 Title: Linkage Map Construction using the MSTmap Algorithm
-Version: 1.0-6
+Version: 1.0-7
 Author: Julian Taylor <julian.taylor@adelaide.edu.au>, David Butler
     <dbutler@uow.edu.au>.
 Maintainer: Julian Taylor <julian.taylor@adelaide.edu.au>
@@ -12,6 +12,6 @@ VignetteBuilder: knitr
 Description: Functions for Accurate and Speedy linkage map construction, manipulation and diagnosis of Doubled Haploid, Backcross and Recombinant Inbred 'R/qtl' objects. This includes extremely fast linkage map clustering and optimal marker ordering using 'MSTmap' (see Wu et al.,2008).
 License: GPL (>= 2)
 NeedsCompilation: yes
-Packaged: 2023-07-15 07:33:39 UTC; a1193984
+Packaged: 2024-01-09 04:49:38 UTC; a1193984
 Repository: CRAN
-Date/Publication: 2023-07-16 18:00:09 UTC
+Date/Publication: 2024-01-09 05:20:05 UTC
