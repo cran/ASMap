@@ -6,6 +6,7 @@
  *  Copyright 2007 __MyCompanyName__. All rights reserved.
  *
  */
+#define R_NO_REMAP
 #include <string>
 #include <sstream>
 #include "genetic_map_DH.h"
@@ -36,8 +37,8 @@ genetic_map::~genetic_map() {
 //////////////////////////////////////////////////////////////////////////////
 int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
 
-  SEXP names = PROTECT(getAttrib(data, R_NamesSymbol));
-  SEXP row_names = PROTECT(getAttrib(data, install("row.names")));
+  SEXP names = Rf_protect(Rf_getAttrib(data, R_NamesSymbol));
+  SEXP row_names = Rf_protect(Rf_getAttrib(data, Rf_install("row.names")));
   string tmp_str;
   extern int trace;
 
@@ -105,7 +106,7 @@ int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
       string SNP_jj;
       ostringstream sstr;
       //raw_mapping_data_file >> SNP_jj;
-      if(!isNumeric(ielem(data,jj))) {
+      if(!Rf_isNumeric(ielem(data,jj))) {
 	SNP_jj = CHAR(STRING_ELT(ielem(data,jj),ii));
 	if ((SNP_jj == "a") or (SNP_jj == "A")) { // homozygous A
 	  marker_data[jj] = "A";
@@ -129,7 +130,7 @@ int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
 	}
       }
       else {
-	sstr << REAL(coerceVector(ielem(data,jj),REALSXP))[ii];
+	sstr << REAL(Rf_coerceVector(ielem(data,jj),REALSXP))[ii];
 	marker_data[jj] = sstr.str();
       }
     }
@@ -459,9 +460,9 @@ void genetic_map::write_output(SEXP &map)
 
   // map allocated & protected in generate_map
   // unprotect at end here
-  PROTECT(iNames=allocVector(STRSXP,individual_names.size()));
+  PROTECT(iNames=Rf_allocVector(STRSXP,individual_names.size()));
   for(unsigned int jj = 0; jj < individual_names.size(); jj++)
-    SET_STRING_ELT(iNames, jj, mkChar(individual_names[jj].c_str()));
+    SET_STRING_ELT(iNames, jj, Rf_mkChar(individual_names[jj].c_str()));
 
   Rprintf("Number of linkage groups: %d\n", number_of_connected_components);
   Rprintf("The size of the linkage groups are: ");
@@ -480,8 +481,8 @@ void genetic_map::write_output(SEXP &map)
 
   for (int ii = 0 ; ii < number_of_connected_components; ii++)
     {
-      PROTECT(dist=allocVector(REALSXP,(connected_components[ii]).size()));
-      PROTECT(mNames=allocVector(STRSXP,(connected_components[ii]).size()));
+      PROTECT(dist=Rf_allocVector(REALSXP,(connected_components[ii]).size()));
+      PROTECT(mNames=Rf_allocVector(STRSXP,(connected_components[ii]).size()));
       node = VECTOR_ELT(map,ii);
       SET_VECTOR_ELT(node,0,dist);
       P_dist = REAL(VECTOR_ELT(node,0));
@@ -507,7 +508,7 @@ void genetic_map::write_output(SEXP &map)
 	   iter2++) {
 	if(trace) Rprintf("%s\t%s\n",marker_names[*iter2].c_str(),"0.000");
 	P_dist[kount]=0.0e0;
-	SET_STRING_ELT(mNames, kount, mkChar(marker_names[*iter2].c_str()));
+	SET_STRING_ELT(mNames, kount, Rf_mkChar(marker_names[*iter2].c_str()));
 	++kount;
       }
       double cum_dist = 0.0;
@@ -525,7 +526,7 @@ void genetic_map::write_output(SEXP &map)
 	    Rprintf("%s\t%s\n",marker_names[*iter2].c_str(),buffer);
 	  }
 	  P_dist[kount]=cum_dist;
-	  SET_STRING_ELT(mNames, kount, mkChar(marker_names[*iter2].c_str()));
+	  SET_STRING_ELT(mNames, kount, Rf_mkChar(marker_names[*iter2].c_str()));
 	  ++kount;
 	}
       }
@@ -536,14 +537,14 @@ void genetic_map::write_output(SEXP &map)
       }
 
       if(trace) Rprintf(";ENDOFGROUP\n\n");
-      setAttrib(dist, R_NamesSymbol, mNames);
-      PROTECT(dimnames = allocVector(VECSXP, 2));
-      PROTECT(cNames=allocVector(STRSXP,rownames.size()));
+      Rf_setAttrib(dist, R_NamesSymbol, mNames);
+      PROTECT(dimnames = Rf_allocVector(VECSXP, 2));
+      PROTECT(cNames=Rf_allocVector(STRSXP,rownames.size()));
       for(unsigned int jj = 0; jj < rownames.size(); jj++)
-	SET_STRING_ELT(cNames, jj, mkChar(rownames[jj].c_str()));
+	SET_STRING_ELT(cNames, jj, Rf_mkChar(rownames[jj].c_str()));
       SET_VECTOR_ELT(dimnames,0,cNames);
       SET_VECTOR_ELT(dimnames,1,iNames);
-      setAttrib(VECTOR_ELT(node,1),R_DimNamesSymbol,dimnames);
+      Rf_setAttrib(VECTOR_ELT(node,1),R_DimNamesSymbol,dimnames);
       UNPROTECT(4);
     }
   UNPROTECT(2); //iNames, map
@@ -774,15 +775,15 @@ void genetic_map_DH::generate_map(SEXP &map)
   distance_between_adjacent_pairs.resize(number_of_connected_components);
 
   // unprotect in write_output
-  PROTECT(map = allocVector(VECSXP,number_of_connected_components));
+  PROTECT(map = Rf_allocVector(VECSXP,number_of_connected_components));
 
   for (int ii = 0 ; ii < number_of_connected_components; ii++)
     {
       SET_VECTOR_ELT(map,ii,newnode=NEW_LIST(2));
-      lNames = PROTECT(allocVector(STRSXP, Rf_length(newnode)));
+      lNames = PROTECT(Rf_allocVector(STRSXP, Rf_length(newnode)));
       for(int nn=0; nn < Rf_length(newnode); nn++)
-	SET_STRING_ELT(lNames, nn, mkChar(comp[nn]));
-      setAttrib(newnode, R_NamesSymbol, lNames);
+	SET_STRING_ELT(lNames, nn, Rf_mkChar(comp[nn]));
+      Rf_setAttrib(newnode, R_NamesSymbol, lNames);
       UNPROTECT(1);
 
       linkage_group_DH * current_linkage_group = construct_linkage_group(ii);
