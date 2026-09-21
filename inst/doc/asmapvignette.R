@@ -47,10 +47,10 @@ data(mapDH, package = "ASMap")
 data(mapBCu, package = "ASMap")
 
 ## ----mst-df,eval=FALSE,echo=TRUE,prompt=FALSE---------------------------------
-#  mstmap.data.frame(object, pop.type = "DH", dist.fun = "kosambi",
-#        objective.fun = "COUNT", p.value = 1e-06, noMap.dist = 15,
-#        noMap.size = 0, miss.thresh = 1, mvest.bc = FALSE, detectBadData = FALSE,
-#        as.cross = TRUE, return.imputed = TRUE, trace = FALSE, ...)
+# mstmap.data.frame(object, pop.type = "DH", dist.fun = "kosambi",
+#       objective.fun = "COUNT", p.value = 1e-06, noMap.dist = 15,
+#       noMap.size = 0, miss.thresh = 1, mvest.bc = FALSE, detectBadData = FALSE,
+#       as.cross = TRUE, return.imputed = TRUE, trace = FALSE, ...)
 
 ## ----datadf,eval=TRUE,echo=TRUE,prompt=TRUE-----------------------------------
 testd <- mstmap(mapDHf, dist.fun = "kosambi", trace = TRUE, as.cross = TRUE)
@@ -58,11 +58,11 @@ nmar(testd)
 chrlen(testd)
 
 ## ----mst-cr,eval = FALSE,echo=TRUE--------------------------------------------
-#  mstmap.cross(object, chr, id = "Genotype", bychr = TRUE,
-#         suffix = "numeric", anchor = FALSE, dist.fun = "kosambi",
-#         objective.fun = "COUNT", p.value = 1e-06, noMap.dist = 15,
-#         noMap.size = 0, miss.thresh = 1, mvest.bc = FALSE, detectBadData =
-#         FALSE, return.imputed = FALSE, trace = FALSE, ...)
+# mstmap.cross(object, chr, id = "Genotype", bychr = TRUE,
+#        suffix = "numeric", anchor = FALSE, dist.fun = "kosambi",
+#        objective.fun = "COUNT", p.value = 1e-06, noMap.dist = 15,
+#        noMap.size = 0, miss.thresh = 1, mvest.bc = FALSE, detectBadData =
+#        FALSE, return.imputed = FALSE, trace = FALSE, ...)
 
 ## ----data, eval = TRUE, echo = TRUE, prompt = TRUE----------------------------
 nmar(mapDH)
@@ -86,12 +86,12 @@ mapDHd <- mstmap(mapDH, chr = names(mapDH$geno)[1:3], bychr = FALSE, dist.fun = 
 nmar(mapDHd)
 
 ## ----pp1,eval=FALSE,echo=TRUE-------------------------------------------------
-#  pullCross(object, chr, type = c("co.located","seg.distortion","missing"),
-#                 pars = NULL, replace = FALSE, ...)
-#  pushCross(object, chr, type = c("co.located","seg.distortion","missing","unlinked"),
-#                 unlinked.chr = NULL, pars = NULL, replace = FALSE, ...)
-#  pp.init(seg.thresh = 0.05, seg.ratio = NULL, miss.thresh = 0.1, max.rf =
-#               0.25, min.lod = 3)
+# pullCross(object, chr, type = c("co.located","seg.distortion","missing"),
+#                pars = NULL, replace = FALSE, ...)
+# pushCross(object, chr, type = c("co.located","seg.distortion","missing","unlinked"),
+#                unlinked.chr = NULL, pars = NULL, replace = FALSE, ...)
+# pp.init(seg.thresh = 0.05, seg.ratio = NULL, miss.thresh = 0.1, max.rf =
+#              0.25, min.lod = 3)
 
 ## ----pp2,eval=TRUE,echo=TRUE,prompt=TRUE--------------------------------------
 mapDHs <- pullCross(mapDH, type = "co.located")
@@ -124,18 +124,18 @@ pull.map(mapDHs)[[21]]
 mapDHs <- mstmap(mapDHs, bychr = TRUE, dist.fun = "kosambi", trace = TRUE, anchor = TRUE, p.value = 2)
 
 ## ----heat1,eval=FALSE,echo=TRUE-----------------------------------------------
-#  heatMap(x, chr, mark, what = c("both", "lod", "rf"), lmax = 12,
-#               rmin = 0, markDiagonal = FALSE, color = rev(rainbow(256, start =
-#               0, end = 2/3)), ...)
+# heatMap(x, chr, mark, what = c("both", "lod", "rf"), lmax = 12,
+#              rmin = 0, markDiagonal = FALSE, color = rev(rainbow(256, start =
+#              0, end = 2/3)), ...)
 
 ## ----heat2,echo=TRUE,eval=FALSE,prompt=TRUE-----------------------------------
-#  heatMap(mapDH, lmax = 50)
+# heatMap(mapDH, lmax = 50)
 
 ## ----prof1, eval = FALSE------------------------------------------------------
-#  statGen(cross, chr, bychr = TRUE, stat.type = c("xo", "dxo", "miss"), id = "Genotype")
-#  profileGen(cross, chr, bychr = TRUE, stat.type = c("xo", "dxo", "miss"), id = "Genotype", xo.lambda = NULL, ...)
-#  statMark(cross, chr, stat.type = c("marker", "interval"), map.function = "kosambi")
-#  profileMark(cross, chr, stat.type = "marker", use.dist = TRUE, map.function = "kosambi", crit.val = NULL, display.markers = FALSE, mark.line = FALSE, ...)
+# statGen(cross, chr, bychr = TRUE, stat.type = c("xo", "dxo", "miss"), id = "Genotype")
+# profileGen(cross, chr, bychr = TRUE, stat.type = c("xo", "dxo", "miss"), id = "Genotype", xo.lambda = NULL, ...)
+# statMark(cross, chr, stat.type = c("marker", "interval"), map.function = "kosambi")
+# profileMark(cross, chr, stat.type = "marker", use.dist = TRUE, map.function = "kosambi", crit.val = NULL, display.markers = FALSE, mark.line = FALSE, ...)
 
 ## ----prof2,fig.width = 15,fig.height = 8,fig.pos = "t",fig.env="figure",fig.scap="NA",fig.cap = "Genotype profiles of missing values, double recombinations and recombinations for \\texttt{mapDH}.",prompt=TRUE----
 profileGen(mapDH, bychr = FALSE, stat.type = c("xo", "dxo", "miss"), id = "Genotype", xo.lambda = 25, layout = c(1,3), lty = 2)
@@ -144,8 +144,8 @@ profileGen(mapDH, bychr = FALSE, stat.type = c("xo", "dxo", "miss"), id = "Genot
 profileMark(mapDH, stat.type = c("seg.dist", "dxo", "erf", "lod"), id = "Genotype", layout = c(1,4), type = "l")
 
 ## ----clones01,eval=FALSE,echo=TRUE,prompt=TRUE--------------------------------
-#  genClones(object, chr, tol = 0.9, id = "Genotype")
-#  fixClones(object, gc, id = "Genotype", consensus = TRUE)
+# genClones(object, chr, tol = 0.9, id = "Genotype")
+# fixClones(object, gc, id = "Genotype", consensus = TRUE)
 
 ## ----clones02,eval=TRUE,echo=TRUE,prompt=TRUE---------------------------------
 gc <- genClones(mapDH, tol = 0.9)
@@ -156,8 +156,8 @@ mapDHg <- fixClones(mapDH, gc$cgd, consensus = TRUE)
 levels(mapDHg$pheno[[1]])[grep("_", levels(mapDHg$pheno[[1]]))]
 
 ## ----mb1, eval = FALSE--------------------------------------------------------
-#  breakCross(cross, split = NULL, suffix = "numeric", sep = ".")
-#  mergeCross(cross, merge = NULL, gap = 5)
+# breakCross(cross, split = NULL, suffix = "numeric", sep = ".")
+# mergeCross(cross, merge = NULL, gap = 5)
 
 ## ----mb2, eval = TRUE,prompt=TRUE---------------------------------------------
 mapDHb1 <- breakCross(mapDH, split = list("3B" = "3B.m.7","6A" = "6A.m.15"))
@@ -172,7 +172,7 @@ mapDHm <- mergeCross(mapDHb1, merge = list("3B" = c("3B.1","3B.2"),"6A" = c("6A.
 nmar(mapDHm)
 
 ## ----quick1,eval=FALSE--------------------------------------------------------
-#  quickEst(object, chr, map.function = "kosambi", ...)
+# quickEst(object, chr, map.function = "kosambi", ...)
 
 ## ----quick2,fig.width = 7,fig.height = 5,fig.pos = "t",fig.env="figure",fig.scap="NA",fig.cap = "Comparison of \\texttt{mapDH} using \\texttt{est.map} and \\texttt{quickEst}.",prompt=TRUE----
 map1 <- est.map(mapDH, map.function = "kosambi")
@@ -187,7 +187,7 @@ mapDH.s <- subsetCross(mapDH.s, ind = 3:218)
 dim(mapDH.s$seg.distortion$data)[1]
 
 ## ----comb1, eval = FALSE------------------------------------------------------
-#  combineMap(..., id = "Genotype", keep.all = TRUE)
+# combineMap(..., id = "Genotype", keep.all = TRUE)
 
 ## ----comb2,eval=TRUE,prompt=TRUE----------------------------------------------
 mapDH1 <- mapDH
@@ -199,10 +199,10 @@ mapDHc <- combineMap(mapDH, mapDH1)
 nmar(mapDHc)
 
 ## ----ex1, eval = FALSE--------------------------------------------------------
-#  data(mapBCu, package = "ASMap")
+# data(mapBCu, package = "ASMap")
 
 ## ----ex3,eval=FALSE,echo=TRUE,prompt=TRUE-------------------------------------
-#  plot.missing(mapBCu)
+# plot.missing(mapBCu)
 
 ## ----ex4,echo=TRUE,prompt=TRUE------------------------------------------------
 sg <- statGen(mapBCu, bychr = FALSE, stat.type = "miss")
@@ -218,7 +218,7 @@ mapBC2 <- fixClones(mapBC1, cgd, consensus = TRUE)
 levels(mapBC2$pheno[[1]])[grep("_", levels(mapBC2$pheno[[1]]))]
 
 ## ----ex7,eval=FALSE,echo=TRUE,prompt=TRUE-------------------------------------
-#  profileMark(mapBC2, stat.type = c("seg.dist", "prop", "miss"), crit.val = "bonf", layout = c(1,4), type = "l", cex = 0.5)
+# profileMark(mapBC2, stat.type = c("seg.dist", "prop", "miss"), crit.val = "bonf", layout = c(1,4), type = "l", cex = 0.5)
 
 ## ----ex8,echo=FALSE,fig.width=17,fig.height=10,warning=FALSE------------------
 profileMark(mapBC2, stat.type = c("seg.dist", "prop", "miss"), crit.val = "bonf", layout = c(1,4), type = "l", cex = 0.5)
@@ -239,10 +239,10 @@ mapBC4 <- mstmap(mapBC3, bychr = FALSE, trace = TRUE, dist.fun = "kosambi", p.va
 chrlen(mapBC4)
 
 ## ----ex12,eval=FALSE,echo=TRUE,prompt=TRUE------------------------------------
-#  heatMap(mapBC4, lmax = 70)
+# heatMap(mapBC4, lmax = 70)
 
 ## ----ex14,eval=FALSE,echo=TRUE,prompt=TRUE------------------------------------
-#  pg <- profileGen(mapBC4, bychr = FALSE, stat.type = c("xo","dxo","miss"), id = "Genotype", xo.lambda = 14, layout = c(1,3), lty = 2, cex = 0.7)
+# pg <- profileGen(mapBC4, bychr = FALSE, stat.type = c("xo","dxo","miss"), id = "Genotype", xo.lambda = 14, layout = c(1,3), lty = 2, cex = 0.7)
 
 ## ----ex15,echo=FALSE,fig.width=17,fig.height=10,warning=FALSE-----------------
 pg <- profileGen(mapBC4, bychr = FALSE, stat.type = c("xo","dxo","miss"), id = "Genotype", xo.lambda = 14, layout = c(1,3), lty = 2, cex = 0.7)
@@ -253,7 +253,7 @@ mapBC6 <- mstmap(mapBC5, bychr = TRUE, dist.fun = "kosambi", trace = TRUE, p.val
 chrlen(mapBC6)
 
 ## ----ex17,eval=FALSE,echo=TRUE,prompt=TRUE------------------------------------
-#  profileMark(mapBC6, stat.type = c("seg.dist","prop","dxo","recomb"), layout = c(1,5), type = "l")
+# profileMark(mapBC6, stat.type = c("seg.dist","prop","dxo","recomb"), layout = c(1,5), type = "l")
 
 ## ----ex18,echo=FALSE,fig.width=17,fig.height=12,warning=FALSE-----------------
 profileMark(mapBC6, stat.type = c("seg.dist","prop","dxo","recomb"), layout = c(1,5), type = "l")
@@ -262,7 +262,7 @@ profileMark(mapBC6, stat.type = c("seg.dist","prop","dxo","recomb"), layout = c(
 mapBC6 <- pushCross(mapBC6, type = "missing", pars = list(miss.thresh = 0.22, max.rf = 0.3))
 
 ## ----ex20,eval=FALSE,echo=TRUE,prompt=TRUE------------------------------------
-#  heatMap(mapBC6, chr = c("L.3","L.5","L.8","L.9"), lmax = 70)
+# heatMap(mapBC6, chr = c("L.3","L.5","L.8","L.9"), lmax = 70)
 
 ## ----ex21,echo=FALSE,fig.width=14,fig.height=8,warning=FALSE,cache=TRUE-------
 heatMap(mapBC6, chr = c("L.3","L.5","L.8","L.9"), lmax = 70)
@@ -274,7 +274,7 @@ mapBC7 <- mstmap(mapBC6, bychr = TRUE, trace = TRUE, dist.fun = "kosambi", p.val
 chrlen(mapBC7)
 
 ## ----ex23,eval=FALSE,echo=TRUE,prompt=TRUE------------------------------------
-#  pg1 <- profileGen(mapBC7, bychr = FALSE, stat.type = c("xo","dxo","miss"), id = "Genotype", xo.lambda = 14, layout = c(1,3), lty = 2, cex = 0.7)
+# pg1 <- profileGen(mapBC7, bychr = FALSE, stat.type = c("xo","dxo","miss"), id = "Genotype", xo.lambda = 14, layout = c(1,3), lty = 2, cex = 0.7)
 
 ## ----ex24,echo=FALSE,fig.width=17,fig.height=10,warning=FALSE-----------------
 pg1 <- profileGen(mapBC7, bychr = FALSE, stat.type = c("xo","dxo","miss"), id = "Genotype", xo.lambda = 14, layout = c(1,3), lty = 2, cex = 0.7)
@@ -285,7 +285,7 @@ mapBC9 <- mstmap(mapBC8, bychr = TRUE, dist.fun = "kosambi", trace = TRUE, p.val
 chrlen(mapBC9)
 
 ## ----ex26,eval=FALSE,echo=TRUE,prompt=TRUE------------------------------------
-#  profileMark(mapBC9, stat.type = c("seg.dist","prop","dxo","recomb"), layout = c(1,5), type = "l")
+# profileMark(mapBC9, stat.type = c("seg.dist","prop","dxo","recomb"), layout = c(1,5), type = "l")
 
 ## ----ex27,echo=FALSE,fig.width=17,fig.height=10,warning=FALSE-----------------
 profileMark(mapBC9, stat.type = c("seg.dist","prop"), layout = c(1,3), type = "l")
@@ -331,7 +331,7 @@ full3 <- pushCross(full3, type = "unlinked", unlinked.chr = "ALL")
 full3 <- mstmap(full3, bychr = TRUE, trace = TRUE, anchor = TRUE, p.value = 2)
 
 ## ----dist1,eval=FALSE,echo=TRUE,prompt=TRUE-----------------------------------
-#  plot.missing(mapBC4)
+# plot.missing(mapBC4)
 
 ## ----dist3,eval=TRUE,echo=TRUE,prompt=TRUE,cache=TRUE-------------------------
 mapBC4i <- mstmap(mapBC3, bychr = FALSE, trace = TRUE, dist.fun = "kosambi", p.value = 1e-12, return.imputed = TRUE)
